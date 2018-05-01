@@ -3,10 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class AudioClass : MonoBehaviour {
+  /// Persistently played background audio throughout the game.
 
-    public AudioSource SoundFiles;
-    public AudioSource MusicFiles;  /// Persistently played background audio throughout the game.
-
+	public AudioClip[] BGM;
     public AudioSource musicSource;
     public AudioSource soundSource;
 
@@ -15,7 +14,6 @@ public class AudioClass : MonoBehaviour {
     public AudioClip GameMusic;
     public AudioClip WinTheme;
     public AudioClip LoseTheme;
-    public AudioClip Interaction;
     public AudioClip SceneShift;
     public AudioClip BlockSet;
 
@@ -29,14 +27,24 @@ public class AudioClass : MonoBehaviour {
         else if (extend != this)
             Destroy(gameObject);
         DontDestroyOnLoad(gameObject);
+		StartInGameMusic ();
     }
-    public void StartWinTheme(AudioClip WinTheme) ///Specific audio clips
+
+	private void Update(){
+		float bgmVolumeF = (float) PlayerPrefs.GetInt("BGMVolume", 0) / 100;
+		float sfxVolumeF = (float) PlayerPrefs.GetInt("SFXVolume", 0) / 100;
+
+		AdjustMusic(bgmVolumeF);
+		AdjustSoundFX(sfxVolumeF);
+	}
+
+    public void StartWinTheme() ///Specific audio clips
     {
         Mute();
         soundSource.clip = WinTheme;
         soundSource.Play();
     }
-    public void StartLoseTheme(AudioClip LoseTheme)
+    public void StartLoseTheme()
     {
         Mute();
         soundSource.clip = LoseTheme;
@@ -66,13 +74,13 @@ public class AudioClass : MonoBehaviour {
         soundSource.clip = SetBlock;
         soundSource.Play();
     }
-        public void StartInGameMusic(AudioClip GameMusic, params AudioClip [] BGM)	///Persistent Music
-		{
-        int randomIndex = Random.Range(0, BGM.Length);
-            musicSource.clip = GameMusic;
-            musicSource.clip = BGM[randomIndex];
-            musicSource.Play();
-        }
+	public void StartInGameMusic()	///Persistent Music
+	{
+		int soundtrack = Random.Range(0, BGM.Length);
+		musicSource.clip = BGM[soundtrack];
+		musicSource.Play();
+		Invoke("StartInGameMusic", musicSource.clip.length);  ////Plays the next track at random 
+	}
         public void Mute()
         {
             musicSource.Stop();
@@ -87,10 +95,7 @@ public class AudioClass : MonoBehaviour {
         }
         public void AdjustMusic(float value)
         {
-            float temp = value + musicSource.volume;
-            if (temp < 0 || temp > 1)
-                return;
-            else
-                musicSource.volume += value;
+          
+                musicSource.volume = value;
         }
     }
