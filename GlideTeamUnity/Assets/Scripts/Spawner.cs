@@ -4,10 +4,12 @@ public class Spawner : MonoBehaviour {
 
     public Block[] blocks;
 
+    public int index;
+
     public void SpawnShape()
     {
         int shapeIndex = Random.Range(0, blocks.Length);
-
+        index = shapeIndex;
         Instantiate(blocks[shapeIndex], transform.position, Quaternion.identity);
     }
 
