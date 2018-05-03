@@ -6,59 +6,42 @@ using UnityEngine;
 
 public class Block : MonoBehaviour
 {
-    //Vector3 distance;
     Transform objectPosition;
     Vector2 originalPosition;
-    //bool moving = false;
-    //public Transform holder;
-    //Holder holder;
-    bool stored = false;
+    Vector2 tempPosition;
+    public bool stored;
+    public bool finished;
 
     void Start()
     {
         // Keep track of original position just in case block is placed
         // in an invalid area
         originalPosition = transform.position;
-
-        //holder = GameObject.FindObjectOfType<Holder>();
-    }
-    
-    void OnMouseDown()
-    {
-        // Distance from camera to object
-        //distance = Camera.main.WorldToScreenPoint(transform.position);
-        //moving = true;
-        //stored = false;
-        Debug.Log(name);
+        stored = false;
+        finished = false;
     }
 
     void OnMouseDrag()
     {
-        // Debug.Log("dragging");
-
         // Get position of mouse while moving it
         Vector2 mousePosition = Input.mousePosition;
         Vector2 objectPosition = Camera.main.ScreenToWorldPoint(mousePosition);
         objectPosition.x = (int)(Mathf.Round(objectPosition.x));
         objectPosition.y = (int)(Mathf.Round(objectPosition.y));
         transform.position = objectPosition;
-        //moving = true;
-        //stored = false;
     }
     
     void OnMouseUp()
     {
-        //foreach (Transform childBlock in transform)
-        //{
-        //    if (childBlock.position.x < 0 || childBlock.position.x > 10 || childBlock.position.y < 0 || childBlock.position.y > 10)
-        //    {
-        //        transform.position = originalPosition;
-        //        Debug.Log("returned");
-        //    }
-        //}
-        if (IsInGrid())
+        if (IsInGrid() && stored == false)
         {
             SetBlock();
+            finished = true;
+        }
+        else if(stored == true)
+        {
+            StoreBlock();
+            finished = true;
         }
         else
         {
@@ -118,6 +101,7 @@ public class Block : MonoBehaviour
             Vector2 position = RoundVector(childBlock.position);
             Grid.grid[(int)position.x, (int)position.y] = childBlock;
         }
+        finished = true;
     }
 
     // Invoked when collision happens
@@ -127,23 +111,36 @@ public class Block : MonoBehaviour
         // If collision with Holder tag
         if(collision.collider.name == "Holder")
         {
-            // If holder is full
+            Debug.Log(Holder.full);
+            // If holder is empty
             if (Holder.full == false)
             {
                 stored = true;
+                Holder.full = true;
+                tempPosition = originalPosition;
+                originalPosition = FindObjectOfType<Holder>().transform.position;
             }
-            else
-            {
-                stored = false;
-            }
-            Debug.Log("Collided");
+            //Debug.Log("Collided");
+            //Debug.Log(stored);
         }
     }
 
-    
+    void OnCollisionExit2D(Collision2D collision)
+    {
+        if(collision.collider.name == "Holder")
+        {
+            Debug.Log("Exited");
+            // Holder is now empty
+            Holder.full = false;
+            // Block is not stored
+            stored = false;
+            Debug.Log("exit stored: " + stored);
+        }
+    }
 
     void StoreBlock()
     {
         transform.position = FindObjectOfType<Holder>().transform.position;
+        finished = true;
     }
 }

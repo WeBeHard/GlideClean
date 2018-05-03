@@ -7,11 +7,11 @@ using UnityEngine;
 
 public class Holder : MonoBehaviour {
 
-    public Block holdBlock = null;
+    //public static Block holdBlock = null;
 
     public static bool full = false;
 
-    public static Transform holder;   
+    //public static Transform holder;   
 
     //void OnCollisionExit(Collision collision)
     //{

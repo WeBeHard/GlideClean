@@ -5,7 +5,7 @@ using UnityEngine;
 public class GameManagerTest : MonoBehaviour {
     
     // grid
-    Grid grid;
+    //Grid grid;
 
     // 3 spawners
     Spawner leftSpawner;
@@ -13,36 +13,45 @@ public class GameManagerTest : MonoBehaviour {
     Spawner rightSpawner;
 
     // holder
-    Holder holder;
+    //Holder holder;
 
-    // game over
-    bool gameOver = false;
+    //// game over
+    //bool gameOver = false;
 
-    // game over panel
-    public GameObject gameOverPanel;
+    //// game over panel
+    //public GameObject gameOverPanel;
 
-    // pause
-    public bool pause = false;
+    //// pause
+    //public bool pause = false;
 
-    // pause panel
-    public GameObject pausePanel;
+    //// pause panel
+    //public GameObject pausePanel;
 
 	// Use this for initialization
 	void Start () {
-        grid = FindObjectOfType<Grid>();
+        //grid = FindObjectOfType<Grid>();
         leftSpawner = GameObject.Find("LeftSpawner").GetComponent<Spawner>();
         middleSpawner = GameObject.Find("MiddleSpawner").GetComponent<Spawner>();
         rightSpawner = GameObject.Find("RightSpawner").GetComponent<Spawner>();
-        holder = FindObjectOfType<Holder>();
+        //holder = FindObjectOfType<Holder>();
     }
 	
 	// Update is called once per frame
 	void Update () {
-        if (gameOver)
+        leftSpawner = GameObject.Find("LeftSpawner").GetComponent<Spawner>();
+        middleSpawner = GameObject.Find("MiddleSpawner").GetComponent<Spawner>();
+        rightSpawner = GameObject.Find("RightSpawner").GetComponent<Spawner>();
+        if (leftSpawner.IsEmpty() == true && middleSpawner.IsEmpty() == true && rightSpawner.IsEmpty() == true)
         {
-            return;
+            leftSpawner.SpawnBlock();
+            middleSpawner.SpawnBlock();
+            rightSpawner.SpawnBlock();
         }
-	}
+        //if (gameOver)
+        //{
+        //    return;
+        //}
+    }
 
     
 }
