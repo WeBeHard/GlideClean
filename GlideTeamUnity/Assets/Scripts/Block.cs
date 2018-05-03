@@ -3,51 +3,76 @@
  * Match object transform to mouse transform
  */
 using UnityEngine;
+using UnityEngine.UI;
 
-public class Block : MonoBehaviour
+public class Block : GridManager
 {
+    //Vector3 distance;
     Transform objectPosition;
     Vector2 originalPosition;
-    Vector2 tempPosition;
-    public bool stored;
-    public bool finished;
+    //bool moving = false;
+    //public Transform holder;
+    //Holder holder;
+    bool stored = false;
+	public static bool isSet = false;
+
+	public Button upButton;
+	public Button downButton;
+	public Button leftButton;
+	public Button rightButton;
 
     void Start()
     {
         // Keep track of original position just in case block is placed
         // in an invalid area
         originalPosition = transform.position;
-        stored = false;
-        finished = false;
+
+        //holder = GameObject.FindObjectOfType<Holder>();
+    }
+    
+    void OnMouseDown()
+    {
+        // Distance from camera to object
+        //distance = Camera.main.WorldToScreenPoint(transform.position);
+        //moving = true;
+        //stored = false;
+        Debug.Log(name);
     }
 
     void OnMouseDrag()
     {
+        // Debug.Log("dragging");
+
         // Get position of mouse while moving it
         Vector2 mousePosition = Input.mousePosition;
         Vector2 objectPosition = Camera.main.ScreenToWorldPoint(mousePosition);
         objectPosition.x = (int)(Mathf.Round(objectPosition.x));
         objectPosition.y = (int)(Mathf.Round(objectPosition.y));
         transform.position = objectPosition;
+        //moving = true;
+        //stored = false;
     }
     
     void OnMouseUp()
     {
-        if (IsInGrid() && stored == false)
+        //foreach (Transform childBlock in transform)
+        //{
+        //    if (childBlock.position.x < 0 || childBlock.position.x > 10 || childBlock.position.y < 0 || childBlock.position.y > 10)
+        //    {
+        //        transform.position = originalPosition;
+        //        Debug.Log("returned");
+        //    }
+        //}
+        if (IsInGrid())
         {
             SetBlock();
-            finished = true;
-        }
-        else if(stored == true)
-        {
-            StoreBlock();
-            finished = true;
         }
         else
         {
             transform.position = originalPosition;
             Debug.Log("returned");
         }
+		isSet = false;
     }
     
     void Update()
@@ -94,15 +119,122 @@ public class Block : MonoBehaviour
         return (Grid.grid[x, y] != null && Grid.grid[x, y].parent != transform);
     }
 
+
+	public void moveBlockUp (Transform obj){
+
+		while (IsValidGridPosition (obj)) {
+			foreach (Transform child in obj) {
+				Vector2 currentPos = RoundVector (child.position);
+				Grid.grid [(int)currentPos.x - 1, (int)currentPos.y] = child;
+			}
+
+		}
+
+	}
+
+
+	public void moveBlockDown (Transform obj){
+
+		while (IsValidGridPosition (obj)) {
+			foreach (Transform child in obj) {
+				Vector2 currentPos = RoundVector (child.position);
+				Grid.grid [(int)currentPos.x + 1, (int)currentPos.y] = child;
+			}
+
+		}
+
+	}
+
+
+	public void moveBlockLeft (Transform obj){
+
+		while (IsValidGridPosition (obj)) {
+			foreach (Transform child in obj) {
+				Vector2 currentPos = RoundVector (child.position);
+				Grid.grid [(int)currentPos.x, (int)currentPos.y - 1] = child;
+			}
+
+		}
+
+	}
+
+
+
+	public void moveBlockRight (Transform obj){
+
+		while (IsValidGridPosition (obj)) {
+			foreach (Transform child in obj) {
+				Vector2 currentPos = RoundVector (child.position);
+				Grid.grid [(int)currentPos.x, (int)currentPos.y + 3] = child;
+			}
+
+		}
+
+	}
+
+
+
     public void SetBlock()
-	{
-		GameObject.Find ("Sound Manager").GetComponent<SoundManager> ().StartDropSound();
-        foreach (Transform childBlock in transform)
-        {
-            Vector2 position = RoundVector(childBlock.position);
-            Grid.grid[(int)position.x, (int)position.y] = childBlock;
-        }
-        finished = true;
+    {
+		upButton = GameObject.FindGameObjectWithTag ("Up").GetComponent<Button>();
+		downButton = GameObject.FindGameObjectWithTag ("Down").GetComponent<Button>();
+		leftButton = GameObject.FindGameObjectWithTag ("Left").GetComponent<Button>();
+		rightButton = GameObject.FindGameObjectWithTag ("Right").GetComponent<Button>();
+
+		Vector2 position; 
+		foreach (Transform childBlock in transform) {
+			position = RoundVector (childBlock.position);
+			Grid.grid [(int)position.x, (int)position.y] = childBlock;
+        
+
+			if ((int)position.x == 0 && (int)position.y == 0) {
+				Vector2 rightButtonPos = position;
+				rightButtonPos.y += 1;
+				rightButton.transform.position = rightButtonPos;
+
+				Vector2 downButtonPos = position;
+				downButtonPos.x += 1;
+				downButton.transform.position = downButtonPos;
+
+
+			} else if ((int)position.x == 0 && (int)position.y == 9) {
+
+
+				Vector2 upButtonPos = position;
+				upButtonPos.x -= 1;
+				upButton.transform.position = upButtonPos;
+
+				Vector2 rightButtonPos = position;
+				rightButtonPos.y += 1;
+				rightButton.transform.position = rightButtonPos;
+
+
+			} else if ((int)position.x == 9 && (int)position.y == 0) {
+
+				Vector2 rightButtonPos = position;
+				rightButtonPos.y += 1;
+				rightButton.transform.position = rightButtonPos;
+
+				Vector2 downButtonPos = position;
+				downButtonPos.x += 1;
+				downButton.transform.position = downButtonPos;
+			
+
+			} else if ((int)position.x == 9 && (int)position.y == 9) {
+			
+				Vector2 upButtonPos = position;
+				upButtonPos.y -= 1;
+				upButton.transform.position = upButtonPos;
+
+				Vector2 leftButtonPos = position;
+				leftButtonPos.x -= 1;
+				leftButton.transform.position = leftButtonPos;
+
+			}
+
+		}
+
+		isSet = true;
     }
 
     // Invoked when collision happens
@@ -112,36 +244,23 @@ public class Block : MonoBehaviour
         // If collision with Holder tag
         if(collision.collider.name == "Holder")
         {
-            Debug.Log(Holder.full);
-            // If holder is empty
+            // If holder is full
             if (Holder.full == false)
             {
                 stored = true;
-                Holder.full = true;
-                tempPosition = originalPosition;
-                originalPosition = FindObjectOfType<Holder>().transform.position;
             }
-            //Debug.Log("Collided");
-            //Debug.Log(stored);
+            else
+            {
+                stored = false;
+            }
+            Debug.Log("Collided");
         }
     }
 
-    void OnCollisionExit2D(Collision2D collision)
-    {
-        if(collision.collider.name == "Holder")
-        {
-            Debug.Log("Exited");
-            // Holder is now empty
-            Holder.full = false;
-            // Block is not stored
-            stored = false;
-            Debug.Log("exit stored: " + stored);
-        }
-    }
+    
 
     void StoreBlock()
     {
         transform.position = FindObjectOfType<Holder>().transform.position;
-        finished = true;
     }
 }
