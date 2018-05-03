@@ -5,17 +5,21 @@ using UnityEngine;
 public class AudioClass : MonoBehaviour {
   /// Persistently played background audio throughout the game.
 
-	public AudioClip[] BGM;
     public AudioSource musicSource;
     public AudioSource soundSource;
 
     public AudioClip dropSound; /// Specific audio clips played when requirements are met.
     public AudioClip LineClearing;
-    public AudioClip GameMusic;
+    public AudioClip titleScreenMusic;
+	public AudioClip classicModeMusic;
+	public AudioClip timeAttackMusic;
+	public AudioClip powersMusic;
     public AudioClip WinTheme;
     public AudioClip LoseTheme;
     public AudioClip SceneShift;
     public AudioClip BlockSet;
+
+
 
     public static AudioClass extend = null;/// For other scripts to call AudioClass
     
@@ -27,7 +31,7 @@ public class AudioClass : MonoBehaviour {
         else if (extend != this)
             Destroy(gameObject);
         DontDestroyOnLoad(gameObject);
-		StartInGameMusic ();
+		StartTitleMusic ();
     }
 
 	private void Update(){
@@ -38,6 +42,17 @@ public class AudioClass : MonoBehaviour {
 		AdjustSoundFX(sfxVolumeF);
 	}
 
+	public void changeBGM(string sceneName){
+		if (sceneName.Equals ("ClassicMode"))
+			StartClassicModeMusic ();
+		else if (sceneName.Equals ("TimeAttack"))
+			StartTimeAttackMusic ();
+		else if (sceneName.Equals ("PowersMode"))
+			StartPowersModeMusic ();
+		else if(!musicSource.clip.Equals(titleScreenMusic))
+			StartTitleMusic ();
+			
+	}
     public void StartWinTheme() ///Specific audio clips
     {
         Mute();
@@ -59,7 +74,7 @@ public class AudioClass : MonoBehaviour {
     {
         soundSource.clip = LineClearing;
     }
-        public void StartdropSound(AudioClip dropSound)
+        public void StartDropSound()
         {
             soundSource.clip = dropSound;
             soundSource.Play();
@@ -74,12 +89,36 @@ public class AudioClass : MonoBehaviour {
         soundSource.clip = SetBlock;
         soundSource.Play();
     }
-	public void StartInGameMusic()	///Persistent Music
+	public void StartTitleMusic()	///Persistent Music
 	{
-		int soundtrack = Random.Range(0, BGM.Length);
-		musicSource.clip = BGM[soundtrack];
+		CancelInvoke ();
+		musicSource.clip = titleScreenMusic;
 		musicSource.Play();
-		Invoke("StartInGameMusic", musicSource.clip.length);  ////Plays the next track at random 
+		Invoke("StartTitleGameMusic", musicSource.clip.length);  ////Plays the next track at random 
+	}
+	
+	public void StartClassicModeMusic()	///Persistent Music
+	{	
+		CancelInvoke ();
+		musicSource.clip = classicModeMusic;
+		musicSource.Play();
+		Invoke("StartClassicModeMusic", musicSource.clip.length);  ////Plays the next track at random 
+	}
+
+	public void StartTimeAttackMusic()	///Persistent Music
+	{	
+		CancelInvoke ();
+		musicSource.clip = timeAttackMusic;
+		musicSource.Play();
+		Invoke("StartTimeAttackMusic", musicSource.clip.length);  ////Plays the next track at random 
+	}
+
+	public void StartPowersModeMusic()	///Persistent Music
+	{	
+		CancelInvoke ();
+		musicSource.clip = powersMusic;
+		musicSource.Play();
+		Invoke("StartPowersModeMusic", musicSource.clip.length);  ////Plays the next track at random 
 	}
         public void Mute()
         {

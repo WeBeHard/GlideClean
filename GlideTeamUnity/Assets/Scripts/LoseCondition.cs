@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class LoseCondition : GridManager {
-
+	/*
 	public bool checkMoves(){
 
 		if (Holder.full) {
@@ -26,7 +26,7 @@ public class LoseCondition : GridManager {
 
 		return false;
 	}
-
+*/
 
 
 

@@ -5,15 +5,18 @@ EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Scenes:
-  - enabled: 1
-    path: Assets/Scenes/TitleScreen.unity
-    guid: baf74922d081d8841bda5064691f7315
+  - enabled: 0
+    path: 
+    guid: 00000000000000000000000000000000
   - enabled: 1
     path: Assets/Scenes/MainMenu.unity
     guid: c580a47de662b9b49a8566352ef262c7
-  - enabled: 1
+  - enabled: 0
     path: Assets/Scenes/Classic.unity
     guid: eb911216051813143a85c27ab342af8e
+  - enabled: 1
+    path: Assets/Scenes/ClassicMode.unity
+    guid: e0e562b7f37443345a1a13a3b22eb58f
   - enabled: 1
     path: Assets/Scenes/TimeAttack.unity
     guid: 62a2af20e7fa317498bbf255faf3ada4
@@ -25,4 +28,10 @@ EditorBuildSettings:
     guid: 7a04e724a840ed54f96886168cac1c2f
   - enabled: 1
     path: Assets/Scenes/Options.unity
-    guid: 31d42d7bfb2665c4bb5e7f6eae355d01
+    guid: b70660dd342986a4ea33d5d859bf576c
+  - enabled: 1
+    path: Assets/Scenes/TitleScreen.unity
+    guid: bd6264097e8214149aee9730d8772a8f
+  - enabled: 0
+    path: 
+    guid: 00000000000000000000000000000000

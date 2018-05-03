@@ -7,7 +7,7 @@ using UnityEngine;
 
 public class Holder : MonoBehaviour {
 
-    //public static Block holdBlock = null;
+    //public Block holdBlock = null;
 
     public static bool full = false;
 

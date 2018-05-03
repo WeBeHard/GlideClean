@@ -21,6 +21,7 @@ public class MainMenu : MonoBehaviour {
 	{
 		float fadeTime = GameObject.Find ("Main Camera").GetComponent<Fading> ().BeginFade (1);
 		yield return new WaitForSeconds(fadeTime);
+		GameObject.Find ("Music Manager").GetComponent<MusicManager> ().changeBGM(sceneName);
 		SceneManager.LoadScene(sceneName);
 	}
 
