@@ -51,6 +51,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+     <Compile Include="Assets\Scripts\AchievementManager.cs" />
      <Compile Include="Assets\Scripts\AudioClass.cs" />
      <Compile Include="Assets\Scripts\Block.cs" />
      <Compile Include="Assets\Scripts\ClickSound.cs" />
@@ -58,13 +59,17 @@
      <Compile Include="Assets\Scripts\Fading.cs" />
      <Compile Include="Assets\Scripts\GameManagerTest.cs" />
      <Compile Include="Assets\Scripts\Grid.cs" />
+     <Compile Include="Assets\Scripts\GridManager.cs" />
      <Compile Include="Assets\Scripts\Holder.cs" />
+     <Compile Include="Assets\Scripts\LoseCondition.cs" />
      <Compile Include="Assets\Scripts\MainMenu.cs" />
+     <Compile Include="Assets\Scripts\MusicManager.cs" />
      <Compile Include="Assets\Scripts\openMenu.cs" />
      <Compile Include="Assets\Scripts\Options.cs" />
      <Compile Include="Assets\Scripts\OurPlayerStats.cs" />
      <Compile Include="Assets\Scripts\RoundVector.cs" />
      <Compile Include="Assets\Scripts\scoreManager.cs" />
+     <Compile Include="Assets\Scripts\SoundManager.cs" />
      <Compile Include="Assets\Scripts\Spawner.cs" />
      <Compile Include="Assets\Scripts\SpriteController.cs" />
      <Compile Include="Assets\Scripts\TitleScreen.cs" />

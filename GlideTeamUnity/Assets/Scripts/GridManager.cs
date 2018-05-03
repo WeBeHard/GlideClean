@@ -54,14 +54,14 @@ public class GridManager : MonoBehaviour {
         for (int n = 0; n < fullRows.Count; ++n)
         {
             DeleteRow(fullRows[n]);
-            AudioClass.extend.StartLineClearingSound(LineClearing); //clear sound
+			GameObject.Find ("Sound Manager").GetComponent<SoundManager> ().StartLineClearingSound(); //clear sound
             yield return new WaitForSeconds(0.8f);
         }
 
         for (int m = 0; m < fullColumns.Count; ++m)
         {
             DeleteColumn(fullColumns[m]);
-            AudioClass.extend.StartLineClearingSound(LineClearing); //clear sound
+			GameObject.Find ("Sound Manager").GetComponent<SoundManager> ().StartLineClearingSound(); //clear sound
             yield return new WaitForSeconds(0.8f);
         }
 
