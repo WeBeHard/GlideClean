@@ -95,7 +95,8 @@ public class Block : MonoBehaviour
     }
 
     public void SetBlock()
-    {
+	{
+		GameObject.Find ("Sound Manager").GetComponent<SoundManager> ().StartDropSound();
         foreach (Transform childBlock in transform)
         {
             Vector2 position = RoundVector(childBlock.position);
