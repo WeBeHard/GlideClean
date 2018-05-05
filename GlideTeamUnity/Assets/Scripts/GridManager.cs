@@ -25,25 +25,11 @@ public class GridManager : MonoBehaviour {
 		return ((int)pos.x >= 0 && (int)pos.x < 10 && (int)pos.y >= 0);
 	}
 
-	public void PlaceShape()
-	{
-		int y = 0;
-		int x = 0;
-        StartCoroutine (CheckFullGrid (y, x));
-    }
 
-
-    IEnumerator CheckFullGrid(int k, int j)
+	IEnumerator CheckFullGrid(int i, int j)
     {
-        for (int y = k; y < 10; y++)
-        {
-            if (IsRowFull(y))
-            {
-                fullRows.Add(y);
-            }
-        }
-
-        for (int x = j; x < 10; x++)
+		/*
+        for (int x = i; x < 10; x++)
         {
             if (IsColumnFull(x))
             {
@@ -51,18 +37,31 @@ public class GridManager : MonoBehaviour {
             }
         }
 
+		for (int y = j; y < 10; y++)
+		{
+			if (IsRowFull(y))
+			{
+				fullRows.Add(y);
+			}
+		}*/
+		if(IsColumnFull(i))
+			fullColumns.Add(i);
+
+		if (IsRowFull (j))
+			fullRows.Add (j);
+		
         for (int n = 0; n < fullRows.Count; ++n)
         {
             DeleteRow(fullRows[n]);
 			GameObject.Find ("Sound Manager").GetComponent<SoundManager> ().StartLineClearingSound(); //clear sound
-            yield return new WaitForSeconds(0.8f);
+			yield return new WaitForSeconds(GameObject.Find ("Sound Manager").GetComponent<SoundManager> ().soundSource.clip.length);
         }
 
         for (int m = 0; m < fullColumns.Count; ++m)
         {
             DeleteColumn(fullColumns[m]);
 			GameObject.Find ("Sound Manager").GetComponent<SoundManager> ().StartLineClearingSound(); //clear sound
-            yield return new WaitForSeconds(0.8f);
+			yield return new WaitForSeconds(GameObject.Find ("Sound Manager").GetComponent<SoundManager> ().soundSource.clip.length);
         }
 
         fullRows.Clear();
@@ -77,7 +76,7 @@ public class GridManager : MonoBehaviour {
         for (int x = 0; x < 10; ++x)
         {
            //if (gameGridCol[x].row[y] == null)
-			if(Grid.grid[x,y] == null)
+			if(Grid.grid[x,y] == null	)
             {
                 return false;
             }
@@ -95,6 +94,7 @@ public class GridManager : MonoBehaviour {
 			Destroy (Grid.grid [x, y].gameObject);
 			Grid.grid [x, y] = null;
         }
+		Debug.Log ("Cleared Row: " + y);
     }
 
     public bool IsColumnFull(int x)
@@ -104,6 +104,7 @@ public class GridManager : MonoBehaviour {
 			//if (gameGridCol[x].row[y] == null)
 			if(Grid.grid[x,y] == null)
             {
+
                 return false;
             }
         }
@@ -120,6 +121,7 @@ public class GridManager : MonoBehaviour {
 			Destroy (Grid.grid [x, y].gameObject);
 			Grid.grid [x, y] = null;
         }
+		Debug.Log ("Cleared Column: " + x);
     }
 
 
@@ -174,14 +176,9 @@ public class GridManager : MonoBehaviour {
 		return true;
 	}
 
-    public void UpdateGrid(Transform obj)
+	public void UpdateGrid(int blockX, int blockY)
 	{
-		if (IsValidGridPosition (obj)) {
-
-            // update grid ui ???
-            // if valid position, spawn movement arrows (call class)
-
-		}
+		StartCoroutine (CheckFullGrid (blockX, blockY));
 	}
 
 

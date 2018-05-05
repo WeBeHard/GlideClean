@@ -82,6 +82,9 @@ public class Block : GridManager
 			{
 				return false;
 			}
+			/*
+			if (!IsOnBorder (position))
+				return false;*/
 		}
 
 		return true;
@@ -100,6 +103,9 @@ public class Block : GridManager
 			int blockMove = Mathf.RoundToInt(b.transform.position.y) + 1;
 			objectPosition.y = (int)(Mathf.Round(blockMove));
 			b.transform.position = objectPosition;
+			Vector2 newBlockPos = RoundVector(transform.position);
+			Grid.grid [(int)newBlockPos.x, (int)newBlockPos.y] = this.transform;
+
 		}
 		hideArrows ();
 		Destroy (this.GetComponent<Block> ());
@@ -112,11 +118,14 @@ public class Block : GridManager
 				Vector2 currentPos = RoundVector (child.position);
 				Grid.grid[(int)currentPos.x, (int)currentPos.y] = null;
 				Grid.grid [(int)currentPos.x, (int)currentPos.y - 1] = child;
+				Debug.Log ("Mino placed at: " + (int)currentPos.x + "," + (int)currentPos.y);
 			}
 			Vector2 objectPosition = b.transform.position;
 			int blockMove = Mathf.RoundToInt(b.transform.position.y) - 1;
 			objectPosition.y = (int)(Mathf.Round(blockMove));
 			b.transform.position = objectPosition;
+			Vector2 newBlockPos = RoundVector(transform.position);
+			Grid.grid [(int)newBlockPos.x, (int)newBlockPos.y] = this.transform;
 		}
 		hideArrows ();
 		Destroy (this.GetComponent<Block> ());
@@ -134,6 +143,8 @@ public class Block : GridManager
 			int blockMove = Mathf.RoundToInt(b.transform.position.x) - 1;
 			objectPosition.x = (int)(Mathf.Round(blockMove));
 			b.transform.position = objectPosition;
+			Vector2 newBlockPos = RoundVector(transform.position);
+			Grid.grid [(int)newBlockPos.x, (int)newBlockPos.y] = this.transform;
 		}
 		hideArrows ();
 		Destroy (this.GetComponent<Block> ());
@@ -147,11 +158,14 @@ public class Block : GridManager
 				Vector2 currentPos = RoundVector (child.position);
 				Grid.grid[(int)currentPos.x, (int)currentPos.y] = null;
 				Grid.grid [(int)currentPos.x + 1, (int)currentPos.y] = child;
+				UpdateGrid ((int)currentPos.x + 1, (int)currentPos.y);
 			}
 			Vector2 objectPosition = b.transform.position;
 			int blockMove = Mathf.RoundToInt(b.transform.position.x) + 1;
 			objectPosition.x = (int)(Mathf.Round(blockMove));
 			b.transform.position = objectPosition;
+			Vector2 newBlockPos = RoundVector(transform.position);
+			Grid.grid [(int)newBlockPos.x, (int)newBlockPos.y] = this.transform;
 		}
 
 		hideArrows ();
@@ -164,7 +178,11 @@ public class Block : GridManager
 	{
 		return ((int)position.x >= 0 && (int) position.x <=10 && (int) position.y >= 0 && (int) position.y <= 10);
 	}
-
+	/*
+	bool IsOnBorder(Vector2 position)
+	{
+		return((int)position.x == 0 || (int)position.x == 9 || (int)position.y == 0 || (int)position.y == 9);
+	}*/
 	// Check if position is already occupied by another shape
 	bool IsOccupied(int x, int y)
 	{
@@ -185,6 +203,9 @@ public class Block : GridManager
 		rightButton.onClick.AddListener(() => moveBlockRight(this));
 		leftButton.onClick.AddListener(() => moveBlockLeft(this));
 		GameObject.Find ("Sound Manager").GetComponent<SoundManager> ().StartDropSound();
+		/*Vector2 newPos = transform.position;
+		newPos = roundPosition (newPos.x, newPos.y);
+		transform.position = newPos;*/
 		foreach (Transform childBlock in transform)
 		{
 			Vector2 position = RoundVector(childBlock.position);
@@ -358,4 +379,26 @@ public class Block : GridManager
 		arrowButton.enabled = true;
 		arrowButton.GetComponentInChildren<CanvasRenderer> ().SetAlpha (1);
 	}
+
+	Vector2 roundPosition(float x, float y){
+		float distanceRight = x - 9;
+		float distanceLeft = x;
+		float distanceTop = y - 9;
+		float distanceBot = y;
+		float finalX = 0;
+		float finalY = 0;
+		float finalMin = Mathf.Min (distanceRight, distanceLeft, distanceTop, distanceBot);
+		if (distanceRight == finalMin)
+			finalX = 9;
+		else if(distanceLeft == finalMin)
+			finalX = 0;
+		else if (distanceBot == finalMin)
+			finalY = 0;
+		else if (distanceTop == finalMin)
+			finalY = 9;
+		Vector2 newPos;
+		newPos.x = finalX;
+		newPos.y = finalY;
+		return newPos;
+	}	
 }
