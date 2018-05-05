@@ -76,7 +76,8 @@ public class GridManager : MonoBehaviour {
     {
         for (int x = 0; x < 10; ++x)
         {
-            if (gameGridCol[x].row[y] == null)
+           //if (gameGridCol[x].row[y] == null)
+			if(Grid.grid[x,y] == null)
             {
                 return false;
             }
@@ -89,16 +90,19 @@ public class GridManager : MonoBehaviour {
         scoreManager.scoreChart.UpdateScore(100); //add score, accomodate score modifer block
         for (int x = 0; x < 10; x++)
         {
-            Destroy(gameGridCol[x].row[y].gameObject);
-            gameGridCol[x].row[y] = null;
+        /*    Destroy(gameGridCol[x].row[y].gameObject);
+            gameGridCol[x].row[y] = null;*/
+			Destroy (Grid.grid [x, y].gameObject);
+			Grid.grid [x, y] = null;
         }
     }
 
     public bool IsColumnFull(int x)
     {
         for (int y = 0; y < 10; ++y)
-        {
-            if (gameGridCol[x].row[y] == null)
+		{
+			//if (gameGridCol[x].row[y] == null)
+			if(Grid.grid[x,y] == null)
             {
                 return false;
             }
@@ -110,9 +114,11 @@ public class GridManager : MonoBehaviour {
     {
         scoreManager.scoreChart.UpdateScore(100); //add score, accomodate score modifer block
         for (int y = 0; y < 0; y++)
-        {
-            Destroy(gameGridCol[x].row[y].gameObject);
-            gameGridCol[x].row[y] = null;
+		{
+			/*    Destroy(gameGridCol[x].row[y].gameObject);
+            gameGridCol[x].row[y] = null;*/
+			Destroy (Grid.grid [x, y].gameObject);
+			Grid.grid [x, y] = null;
         }
     }
 
@@ -126,7 +132,7 @@ public class GridManager : MonoBehaviour {
 	{
 		foreach (Transform child in obj) {
 
-			if (child.gameObject.tag.Equals ("Block")) {
+
 
 				Vector2 v = roundVec2 (child.position);
 
@@ -138,82 +144,35 @@ public class GridManager : MonoBehaviour {
 					
 					return false;
 				}
-			}
+
 		}
 		return true;
 	}
 
+	public bool IsMoveValid(Transform obj, int xShift, int yShift)
+	{
+		foreach (Transform child in obj) {
 
-    #region potential block slide movement (unused)
-    /*
-        public enum DraggedDirection
-        {
-            Up,
-            Down,
-            Right,
-            Left,
-            Point
-        }
 
-        //inside class
-        Vector2 firstPressPos;
-        Vector2 secondPressPos;
-        Vector2 currentSwipe;
-        DraggedDirection direction;
-        public void Swipe()
-        {
 
-            if(Input.touches.Length > 0)
-            {
-                Touch t = Input.GetTouch(0);
+			Vector2 v = roundVec2 (child.position);
+			v.x = v.x + xShift;
+			v.y = v.y + yShift;
+			if (v.x > 9 || v.y > 9 || v.x < 0 || v.y < 0)
+				return false;
+			if (!InsideBorder (v)) {
+				return false;
+			}
 
-                if(t.phase == TouchPhase.Began)
-                {
-                    //save began touch 2d point
-                    firstPressPos = new Vector2(t.position.x,t.position.y);
-                }
-                if (t.phase == TouchPhase.Ended) {
-                    //save ended touch 2d point
-                    secondPressPos = new Vector2 (t.position.x, t.position.y);
+			//if (gameGridCol [(int)v.x].row [(int)v.y] != null && gameGridCol [(int)v.x].row [(int)v.y] != obj) {
+			if(Grid.grid[(int)(v.x), (int)(v.y)] != null && !Grid.grid[(int)(v.x), (int)(v.y)].IsChildOf(obj)){
+				Debug.Log ("Collision at " + v.x + "," + v.y + ".");
+				return false;
+			}
 
-                    //create vector from the two points
-                    currentSwipe = new Vector3 (secondPressPos.x - firstPressPos.x, secondPressPos.y - firstPressPos.y);
-
-                    //normalize the 2d vector
-                    currentSwipe.Normalize ();
-                }
-
-                    //swipe upwards
-                    if(currentSwipe.y > 0 && currentSwipe.x > -0.5f && currentSwipe.x < 0.5f)
-                    {
-                        Debug.Log("up swipe");
-                        direction = DraggedDirection.Up;
-                    }
-                    //swipe down
-                    if(currentSwipe.y < 0 && currentSwipe.x > -0.5f && currentSwipe.x < 0.5f)
-                    {
-                        Debug.Log("down swipe");
-                        direction = DraggedDirection.Down;
-                    }
-                    //swipe left
-                    if(currentSwipe.x < 0 && currentSwipe.y > -0.5f && currentSwipe.y < 0.5f)
-                    {
-                        Debug.Log("left swipe");
-                        direction = DraggedDirection.Left;
-                    }
-                    //swipe right
-                    if(currentSwipe.x > 0 && currentSwipe.y > -0.5f && currentSwipe.y < 0.5f)
-                    {
-                        Debug.Log("right swipe");
-                        direction = DraggedDirection.Right;
-                    }
-
-            }
-            //return direction;
-        }
-    */
-    #endregion potential block slide movement (unused)
-
+		}
+		return true;
+	}
 
     public void UpdateGrid(Transform obj)
 	{

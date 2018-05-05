@@ -5,7 +5,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 
-public class Block : MonoBehaviour
+public class Block : GridManager
 {
 	Transform objectPosition;
 	Vector2 originalPosition;
@@ -86,56 +86,79 @@ public class Block : MonoBehaviour
 
 		return true;
 	}
-	/*
-	public void moveBlockUp (Transform obj){
 
-		while (IsValidGridPosition (obj)) {
-			foreach (Transform child in obj) {
+	// Try instantiating and destroying
+	public void moveBlockUp (Block b){
+
+		while (IsMoveValid (b.transform, 0, 1)) {
+			foreach (Transform child in b.transform) {
 				Vector2 currentPos = RoundVector (child.position);
-				Grid.grid [(int)currentPos.x - 1, (int)currentPos.y] = child;
+				Grid.grid[(int)currentPos.x, (int)currentPos.y] = null;
+				Grid.grid [(int)currentPos.x, (int)currentPos.y + 1] = child;
 			}
-
+			Vector2 objectPosition = b.transform.position;
+			int blockMove = Mathf.RoundToInt(b.transform.position.y) + 1;
+			objectPosition.y = (int)(Mathf.Round(blockMove));
+			b.transform.position = objectPosition;
 		}
-
+		hideArrows ();
+		Destroy (this.GetComponent<Block> ());
 	}
 		
-	public void moveBlockDown (Transform obj){
+	public void moveBlockDown (Block b){
 
-		while (IsValidGridPosition (obj)) {
-			foreach (Transform child in obj) {
+		while (IsMoveValid (b.transform, 0, -1)) {
+			foreach (Transform child in b.transform) {
 				Vector2 currentPos = RoundVector (child.position);
-				Grid.grid [(int)currentPos.x + 1, (int)currentPos.y] = child;
-			}
-
-		}
-
-	}
-		
-	public void moveBlockLeft (Transform obj){
-
-		while (IsValidGridPosition (obj)) {
-			foreach (Transform child in obj) {
-				Vector2 currentPos = RoundVector (child.position);
+				Grid.grid[(int)currentPos.x, (int)currentPos.y] = null;
 				Grid.grid [(int)currentPos.x, (int)currentPos.y - 1] = child;
 			}
-
+			Vector2 objectPosition = b.transform.position;
+			int blockMove = Mathf.RoundToInt(b.transform.position.y) - 1;
+			objectPosition.y = (int)(Mathf.Round(blockMove));
+			b.transform.position = objectPosition;
 		}
-
+		hideArrows ();
+		Destroy (this.GetComponent<Block> ());
 	}
 		
-	public void moveBlockRight (Transform obj){
+	public void moveBlockLeft (Block b){
 
-		while (IsValidGridPosition (obj)) {
-			foreach (Transform child in obj) {
+		while (IsMoveValid (b.transform, -1, 0)) {
+			foreach (Transform child in b.transform) {
 				Vector2 currentPos = RoundVector (child.position);
-				Grid.grid [(int)currentPos.x, (int)currentPos.y + 3] = child;
+				Grid.grid[(int)currentPos.x, (int)currentPos.y] = null;
+				Grid.grid [(int)currentPos.x - 1, (int)currentPos.y] = child;
 			}
+			Vector2 objectPosition = b.transform.position;
+			int blockMove = Mathf.RoundToInt(b.transform.position.x) - 1;
+			objectPosition.x = (int)(Mathf.Round(blockMove));
+			b.transform.position = objectPosition;
+		}
+		hideArrows ();
+		Destroy (this.GetComponent<Block> ());
+			
+	}
+		
+	public void moveBlockRight (Block b){
 
+		while (IsMoveValid (b.transform, 1, 0)) {
+			foreach (Transform child in b.transform) {
+				Vector2 currentPos = RoundVector (child.position);
+				Grid.grid[(int)currentPos.x, (int)currentPos.y] = null;
+				Grid.grid [(int)currentPos.x + 1, (int)currentPos.y] = child;
+			}
+			Vector2 objectPosition = b.transform.position;
+			int blockMove = Mathf.RoundToInt(b.transform.position.x) + 1;
+			objectPosition.x = (int)(Mathf.Round(blockMove));
+			b.transform.position = objectPosition;
 		}
 
+		hideArrows ();
+		Destroy (this.GetComponent<Block> ());
 	}
 
-	*/
+		
 	// Check if position is within border
 	bool IsInBorder(Vector2 position)
 	{
@@ -151,62 +174,111 @@ public class Block : MonoBehaviour
 
 	public void SetBlock()
 	{
-		/*
-		upButton = GameObject.FindGameObjectWithTag ("Up").GetComponent<Button>();
-		downButton = GameObject.FindGameObjectWithTag ("Down").GetComponent<Button>();
-		leftButton = GameObject.FindGameObjectWithTag ("Left").GetComponent<Button>();
-		rightButton = GameObject.FindGameObjectWithTag ("Right").GetComponent<Button>();
-*/
+		
+		upButton = GameObject.Find ("Up").GetComponent<Button>();
+		downButton = GameObject.Find ("Down").GetComponent<Button>();
+		leftButton = GameObject.Find ("Left").GetComponent<Button>();
+		rightButton = GameObject.Find ("Right").GetComponent<Button>();
+
+		upButton.onClick.AddListener(() => moveBlockUp(this));
+		downButton.onClick.AddListener(() => moveBlockDown(this));
+		rightButton.onClick.AddListener(() => moveBlockRight(this));
+		leftButton.onClick.AddListener(() => moveBlockLeft(this));
 		GameObject.Find ("Sound Manager").GetComponent<SoundManager> ().StartDropSound();
 		foreach (Transform childBlock in transform)
 		{
 			Vector2 position = RoundVector(childBlock.position);
-			Grid.grid[(int)position.x, (int)position.y] = childBlock;
-			/*
-			if ((int)position.x == 0 && (int)position.y == 0) {
-				Vector2 rightButtonPos = position;
-				rightButtonPos.y += 1;
-				rightButton.transform.position = rightButtonPos;
+			//Grid.grid[(int)position.x, (int)position.y] = childBlock;
 
-				Vector2 downButtonPos = position;
-				downButtonPos.x += 1;
-				downButton.transform.position = downButtonPos;
+			if ((int)position.x == 0 && (int)position.y == 0) {
+
+				showArrows("Up", "Right");
+				Vector2 upButtonPos = position;
+				upButtonPos.y += 3;
+				upButton.transform.position = upButtonPos;
+
+				Vector2 rightButtonPos = position;
+				rightButtonPos.x += 3;
+				rightButton.transform.position = rightButtonPos;
 
 
 			} else if ((int)position.x == 0 && (int)position.y == 9) {
 
-
-				Vector2 upButtonPos = position;
-				upButtonPos.x -= 1;
-				upButton.transform.position = upButtonPos;
+				showArrows("Down", "Right");
+				Vector2 downButtonPos = position;
+				downButtonPos.y -= 2;
+				downButtonPos.x += 1;
+				downButton.transform.position = downButtonPos;
 
 				Vector2 rightButtonPos = position;
-				rightButtonPos.y += 1;
+				rightButtonPos.x += 3;
 				rightButton.transform.position = rightButtonPos;
 
 
 			} else if ((int)position.x == 9 && (int)position.y == 0) {
 
-				Vector2 rightButtonPos = position;
-				rightButtonPos.y += 1;
-				rightButton.transform.position = rightButtonPos;
+				showArrows("Up", "Left");
+				Vector2 leftButtonPos = position;
+				leftButtonPos.x -= 3;
+				leftButton.transform.position = leftButtonPos;
 
-				Vector2 downButtonPos = position;
-				downButtonPos.x += 1;
-				downButton.transform.position = downButtonPos;
+				Vector2 upButtonPos = position;
+				upButtonPos.y += 3;
+				upButtonPos.x -= 1;
+				upButton.transform.position = upButtonPos;
 
 
 			} else if ((int)position.x == 9 && (int)position.y == 9) {
 
-				Vector2 upButtonPos = position;
-				upButtonPos.y -= 1;
-				upButton.transform.position = upButtonPos;
+				showArrows("Down", "Left");
+				Vector2 downButtonPos = position;
+				downButtonPos.y -= 3;
+				downButtonPos.x -= 1;
+				downButton.transform.position = downButtonPos;
 
 				Vector2 leftButtonPos = position;
-				leftButtonPos.x -= 1;
+				leftButtonPos.x -= 3;
 				leftButton.transform.position = leftButtonPos;
 
-			}*/
+			}
+			else if ((int)position.x == 0) {
+
+				showArrows("Right");
+				Vector2 rightButtonPos = position;
+				rightButtonPos.x += 3;
+				rightButton.transform.position = rightButtonPos;
+
+
+			}
+			else if ((int)position.x == 9) {
+
+				showArrows("Left");
+				Vector2 leftButtonPos = position;
+				leftButtonPos.x -= 3;
+				leftButton.transform.position = leftButtonPos;
+
+
+			}
+			else if ((int)position.y == 0) {
+
+				showArrows("Up");
+				Vector2 upButtonPos = position;
+				upButtonPos.y += 3;
+				upButtonPos.x -= 1;
+				upButton.transform.position = upButtonPos;
+
+
+			}
+			else if ((int)position.y == 9) {
+
+				showArrows("Down");
+				Vector2 downButtonPos = position;
+				downButtonPos.y -= 3;
+				downButtonPos.x -= 1;
+				downButton.transform.position = downButtonPos;
+
+
+			}
 		}
 		finished = true;
 	}
@@ -249,5 +321,41 @@ public class Block : MonoBehaviour
 	{
 		transform.position = FindObjectOfType<Holder>().transform.position;
 		finished = true;
+	}
+
+	void hideArrows(){
+		upButton = GameObject.Find ("Up").GetComponent<Button> ();
+		downButton = GameObject.Find ("Down").GetComponent<Button> ();
+		leftButton = GameObject.Find ("Left").GetComponent<Button> ();
+		rightButton = GameObject.Find ("Right").GetComponent<Button> ();
+
+		upButton.enabled = false;
+		upButton.GetComponentInChildren<CanvasRenderer> ().SetAlpha (0);
+		downButton.enabled = false;
+		downButton.GetComponentInChildren<CanvasRenderer> ().SetAlpha (0);
+		leftButton.enabled = false;
+		leftButton.GetComponentInChildren<CanvasRenderer> ().SetAlpha (0);
+		rightButton.enabled = false;
+		rightButton.GetComponentInChildren<CanvasRenderer> ().SetAlpha (0);
+	}
+
+	void showArrows(string arrow1, string arrow2){
+
+		Button arrowButton1 = GameObject.Find (arrow1).GetComponent<Button> ();
+		Button arrowButton2 = GameObject.Find (arrow2).GetComponent<Button> ();
+
+		arrowButton1.enabled = true;
+		arrowButton1.GetComponentInChildren<CanvasRenderer> ().SetAlpha (1);
+		arrowButton2.enabled = true;
+		arrowButton2.GetComponentInChildren<CanvasRenderer> ().SetAlpha (1);
+		Debug.Log("present");
+	}
+
+	void showArrows(string arrow){
+
+		Button arrowButton = GameObject.Find (arrow).GetComponent<Button> ();
+
+		arrowButton.enabled = true;
+		arrowButton.GetComponentInChildren<CanvasRenderer> ().SetAlpha (1);
 	}
 }
