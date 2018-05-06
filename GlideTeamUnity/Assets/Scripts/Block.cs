@@ -98,6 +98,7 @@ public class Block : GridManager
 				Vector2 currentPos = RoundVector (child.position);
 				Grid.grid[(int)currentPos.x, (int)currentPos.y] = null;
 				Grid.grid [(int)currentPos.x, (int)currentPos.y + 1] = child;
+				Debug.Log ("Mino placed at: " + (int)currentPos.x + "," + (int)currentPos.y);
 			}
 			Vector2 objectPosition = b.transform.position;
 			int blockMove = Mathf.RoundToInt(b.transform.position.y) + 1;
@@ -108,6 +109,7 @@ public class Block : GridManager
 
 		}
 		hideArrows ();
+		ClearCheck (b);
 		Destroy (this.GetComponent<Block> ());
 	}
 		
@@ -128,6 +130,7 @@ public class Block : GridManager
 			Grid.grid [(int)newBlockPos.x, (int)newBlockPos.y] = this.transform;
 		}
 		hideArrows ();
+		ClearCheck (b);
 		Destroy (this.GetComponent<Block> ());
 	}
 		
@@ -147,6 +150,7 @@ public class Block : GridManager
 			Grid.grid [(int)newBlockPos.x, (int)newBlockPos.y] = this.transform;
 		}
 		hideArrows ();
+		ClearCheck (b);
 		Destroy (this.GetComponent<Block> ());
 			
 	}
@@ -158,7 +162,6 @@ public class Block : GridManager
 				Vector2 currentPos = RoundVector (child.position);
 				Grid.grid[(int)currentPos.x, (int)currentPos.y] = null;
 				Grid.grid [(int)currentPos.x + 1, (int)currentPos.y] = child;
-				UpdateGrid ((int)currentPos.x + 1, (int)currentPos.y);
 			}
 			Vector2 objectPosition = b.transform.position;
 			int blockMove = Mathf.RoundToInt(b.transform.position.x) + 1;
@@ -169,10 +172,19 @@ public class Block : GridManager
 		}
 
 		hideArrows ();
+		ClearCheck (b);
 		Destroy (this.GetComponent<Block> ());
 	}
 
-		
+	void ClearCheck(Block b){
+		Vector2 newBlockPos = RoundVector(b.transform.position);
+		UpdateGrid ((int)newBlockPos.x, (int)newBlockPos.y);
+		foreach (Transform child in b.transform) {
+			Vector2 currentPos = RoundVector (child.position);
+			UpdateGrid ((int)currentPos.x, (int)currentPos.y);
+		}
+	}
+
 	// Check if position is within border
 	bool IsInBorder(Vector2 position)
 	{
@@ -311,7 +323,6 @@ public class Block : GridManager
 		// If collision with Holder tag
 		if(collision.collider.name == "Holder")
 		{
-			Debug.Log(Holder.full);
 			// If holder is empty
 			if (Holder.full == false)
 			{

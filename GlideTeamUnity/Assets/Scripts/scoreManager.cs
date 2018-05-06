@@ -1,12 +1,14 @@
 ﻿using System.Collections;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class scoreManager : MonoBehaviour
 {
-    public int CurrentGameMode = 0;
-    public int GameModeHiScore = 0;
-    public int CurrentScore = 0;
+    public int currentGameMode;
+    public int gameModeHiScore;
+    public int currentScore;
+	public Text InGameScore;
 
     public static scoreManager scoreChart = null;
 
@@ -17,45 +19,47 @@ public class scoreManager : MonoBehaviour
 
             if (sceneName == "ClassicMode")
             {
-                GameModeHiScore =  PlayerPrefs.GetInt("ClassicHighScore");
-                CurrentGameMode = 1;
+                gameModeHiScore =  PlayerPrefs.GetInt("ClassicHighScore");
+                currentGameMode= 1;
             }
             else if (sceneName == "TimeAttack")
             {
-                GameModeHiScore = PlayerPrefs.GetInt("TimeAttackHighScore");
-                CurrentGameMode = 2;
+                gameModeHiScore = PlayerPrefs.GetInt("TimeAttackHighScore");
+                currentGameMode= 2;
             }
             else if (sceneName == "PowersMode")
             {
-                GameModeHiScore = PlayerPrefs.GetInt("PowersHighScore");
-                CurrentGameMode = 3;
+                gameModeHiScore = PlayerPrefs.GetInt("PowersHighScore");
+                currentGameMode= 3;
             }
             else
             {
-                GameModeHiScore = 0;
+                gameModeHiScore = 0;
             }
         }
         
         private void Awake()
         {
             checkCurrentGameMode();
+		currentScore = 0;
             //Managers.UI.inGameUI.UpdateScoreUI(); // Dipslay score on UI if used
         }
 
         public void UpdateScore(int UpdateValue)
         {
-            CurrentScore += UpdateValue;
-            CheckGameModeHiScore();
+            currentScore += UpdateValue;
+		InGameScore.text = currentScore.ToString();
+            CheckgameModeHiScore();
             //Managers.UI.inGameUI.UpdateScoreUI(); // Dipslay score on UI if used
             int newCumulativeScore = (PlayerPrefs.GetInt("CumulativeScore")) + UpdateValue;
             PlayerPrefs.SetInt("CumulativeScore", newCumulativeScore);
         }
 
-        public void CheckGameModeHiScore()
+        public void CheckgameModeHiScore()
         {
-            if (GameModeHiScore < CurrentScore)
+            if (gameModeHiScore < currentScore)
             {
-                GameModeHiScore = CurrentScore;
+                gameModeHiScore = currentScore;
             }
         }
         
@@ -64,13 +68,13 @@ public class scoreManager : MonoBehaviour
             int temp0 = (PlayerPrefs.GetInt("TotalGamesPlayed")) + 1;
             PlayerPrefs.SetInt("TotalGamesPlayed", temp0);
 
-            if (CurrentGameMode == 1)
+            if (currentGameMode== 1)
             {
-                if (GameModeHiScore <= CurrentScore)
+                if (gameModeHiScore <= currentScore)
                 {
-                    PlayerPrefs.SetInt("ClassicHighScore", CurrentScore);
+                    PlayerPrefs.SetInt("ClassicHighScore", currentScore);
                 }
-                int temp1 = (PlayerPrefs.GetInt("ClassicTotalScore")) + CurrentScore;
+                int temp1 = (PlayerPrefs.GetInt("ClassicTotalScore")) + currentScore;
                              PlayerPrefs.SetInt("ClassicTotalScore", temp1);
 
                 int temp2 = (PlayerPrefs.GetInt("ClassicTotalGamesPlayed")) + 1;
@@ -80,13 +84,13 @@ public class scoreManager : MonoBehaviour
 				int temp3 = (int) avg;
                              PlayerPrefs.SetInt("ClassicAvgScore", temp3);
             }
-            else if (CurrentGameMode == 2)
+            else if (currentGameMode== 2)
             {
-                if (GameModeHiScore <= CurrentScore)
+                if (gameModeHiScore <= currentScore)
                 {
-                    PlayerPrefs.SetInt("TimeAttackHighScore", CurrentScore);
+                    PlayerPrefs.SetInt("TimeAttackHighScore", currentScore);
                 }
-                int temp1 = (PlayerPrefs.GetInt("TimeAttackTotalScore")) + CurrentScore;
+                int temp1 = (PlayerPrefs.GetInt("TimeAttackTotalScore")) + currentScore;
                              PlayerPrefs.SetInt("TimeAttackTotalScore", temp1);
 
                 int temp2 = (PlayerPrefs.GetInt("TimeAttackTotalGamesPlayed")) + 1;
@@ -96,13 +100,13 @@ public class scoreManager : MonoBehaviour
 				int temp3 = (int) avg;
                              PlayerPrefs.SetInt("TimeAttackAvgScore", temp3);
             }
-            else if (CurrentGameMode == 3)
+            else if (currentGameMode== 3)
             {
-                if (GameModeHiScore <= CurrentScore)
+                if (gameModeHiScore <= currentScore)
                 {
-                    PlayerPrefs.SetInt("PowersHighScore", CurrentScore);
+                    PlayerPrefs.SetInt("PowersHighScore", currentScore);
                 }
-                int temp1 = (PlayerPrefs.GetInt("PowersTotalScore")) + CurrentScore;
+                int temp1 = (PlayerPrefs.GetInt("PowersTotalScore")) + currentScore;
                              PlayerPrefs.SetInt("PowersTotalScore", temp1);
 
                 int temp2 = (PlayerPrefs.GetInt("PowersTotalGamesPlayed")) + 1;
@@ -116,7 +120,7 @@ public class scoreManager : MonoBehaviour
 
         public void ResetScore()
         {
-            CurrentScore = 0;
+            currentScore = 0;
             checkCurrentGameMode();
             //Managers.UI.inGameUI.UpdateScoreUI(); Update UI if used
         }

@@ -91,7 +91,6 @@ public class GridManager : MonoBehaviour {
         {
         /*    Destroy(gameGridCol[x].row[y].gameObject);
             gameGridCol[x].row[y] = null;*/
-			Destroy (Grid.grid [x, y].gameObject);
 			Grid.grid [x, y] = null;
         }
 		Debug.Log ("Cleared Row: " + y);
@@ -153,11 +152,18 @@ public class GridManager : MonoBehaviour {
 
 	public bool IsMoveValid(Transform obj, int xShift, int yShift)
 	{
+		/*Vector2 block = roundVec2 (obj.position);
+		block.x = block.x + xShift;
+		block.y = block.y + yShift;
+		if (block.x > 9 || block.y > 9 || block.x < 0 || block.y < 0)
+			return false;
+	
+		if(Grid.grid[(int)(block.x), (int)(block.y)] != null && !Grid.grid[(int)(block.x), (int)(block.y)].IsChildOf(obj)){
+			Debug.Log ("Collision at " + block.x + "," + block.y + ".");
+			return false;
+		}*/
 		foreach (Transform child in obj) {
-
-
-
-			Vector2 v = roundVec2 (child.position);
+		Vector2 v = roundVec2 (child.position);
 			v.x = v.x + xShift;
 			v.y = v.y + yShift;
 			if (v.x > 9 || v.y > 9 || v.x < 0 || v.y < 0)
@@ -173,6 +179,7 @@ public class GridManager : MonoBehaviour {
 			}
 
 		}
+
 		return true;
 	}
 
