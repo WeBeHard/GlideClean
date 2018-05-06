@@ -13,6 +13,7 @@ public class SoundManager : MonoBehaviour
     public AudioClip LoseTheme;
     public AudioClip Interaction;
     public AudioClip SetBlock;
+    public static SoundManager lend = null;
 
 	private void Update(){
 		float sfxVolumeF = (float) PlayerPrefs.GetInt("SFXVolume", 0) / 100;
