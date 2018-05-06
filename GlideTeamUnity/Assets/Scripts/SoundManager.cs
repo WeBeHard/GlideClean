@@ -9,7 +9,6 @@ public class SoundManager : MonoBehaviour
 
     public AudioClip dropSound; /// Specific audio clips played when requirements are met.
     public AudioClip LineClearing;
-    public AudioClip GameMusic;
     public AudioClip LoseTheme;
     public AudioClip Interaction;
 	public AudioClip SetBlock;

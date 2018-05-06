@@ -94,7 +94,7 @@ public class Block : GridManager
 
 	// Try instantiating and destroying
 	public void moveBlockUp (Block b){
-
+		GameObject.Find ("Sound Manager").GetComponent<SoundManager> ().StartInteractionSound();
 		while (IsMoveValid (b.transform, 0, 1)) {
 			foreach (Transform child in b.transform) {
 				Vector2 currentPos = RoundVector (child.position);
@@ -123,6 +123,7 @@ public class Block : GridManager
 	}
 		
 	public void moveBlockDown (Block b){
+		GameObject.Find ("Sound Manager").GetComponent<SoundManager> ().StartInteractionSound();
 		while (IsMoveValid (b.transform, 0, -1)) {
 			foreach (Transform child in b.transform) {
 				Vector2 currentPos = RoundVector (child.position);
@@ -151,7 +152,7 @@ public class Block : GridManager
 	}
 
 	public void moveBlockLeft (Block b){
-
+		GameObject.Find ("Sound Manager").GetComponent<SoundManager> ().StartInteractionSound();
 		while (IsMoveValid (b.transform, -1, 0)) {
 			foreach (Transform child in b.transform) {
 				Vector2 currentPos = RoundVector (child.position);
@@ -179,7 +180,7 @@ public class Block : GridManager
 	}
 		
 	public void moveBlockRight (Block b){
-		
+		GameObject.Find ("Sound Manager").GetComponent<SoundManager> ().StartInteractionSound();
 		while (IsMoveValid (b.transform, 1, 0)) {
 			foreach (Transform child in b.transform) {
 				Vector2 currentPos = RoundVector (child.position);
