@@ -12,8 +12,8 @@ public class SoundManager : MonoBehaviour
     public AudioClip GameMusic;
     public AudioClip LoseTheme;
     public AudioClip Interaction;
-    public AudioClip SetBlock;
-    public static SoundManager lend = null;
+	public AudioClip SetBlock;
+	public static SoundManager lend = null;
 
 	private void Update(){
 		float sfxVolumeF = (float) PlayerPrefs.GetInt("SFXVolume", 0) / 100;
@@ -57,11 +57,10 @@ public class SoundManager : MonoBehaviour
 
     public void AdjustSoundFX(float value)  ///Volume Adjustment methods
     {
-        float temp = value + soundSource.volume;
-        if (temp < 0 || temp > 1)
+        if (value < 0 || value > 1)
             return;
         else
-            soundSource.volume += value;
+            soundSource.volume = value;
     }
 }
   

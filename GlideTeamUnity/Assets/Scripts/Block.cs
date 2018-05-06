@@ -2,6 +2,8 @@
  * Detect if object was clicked
  * Match object transform to mouse transform
  */
+
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -18,7 +20,7 @@ public class Block : GridManager
 	public Button leftButton;
 	public Button rightButton;
 
-	void Start()
+	public void Start()
 	{
 		// Keep track of original position just in case block is placed
 		// in an invalid area
@@ -98,7 +100,6 @@ public class Block : GridManager
 				Vector2 currentPos = RoundVector (child.position);
 				Grid.grid[(int)currentPos.x, (int)currentPos.y] = null;
 				Grid.grid [(int)currentPos.x, (int)currentPos.y + 1] = child;
-				Debug.Log ("Mino placed at: " + (int)currentPos.x + "," + (int)currentPos.y);
 			}
 			Vector2 objectPosition = b.transform.position;
 			int blockMove = Mathf.RoundToInt(b.transform.position.y) + 1;
@@ -109,18 +110,21 @@ public class Block : GridManager
 
 		}
 		hideArrows ();
-		ClearCheck (b);
+		foreach (Transform child in b.transform) {
+			Vector2 currentPos = RoundVector (child.position);
+			Grid.grid [(int)currentPos.x, (int)currentPos.y] = child;
+			child.gameObject.AddComponent<PlacedBlock>();
+		}
 		Destroy (this.GetComponent<Block> ());
+		ClearCheck (b.transform);
 	}
 		
 	public void moveBlockDown (Block b){
-
 		while (IsMoveValid (b.transform, 0, -1)) {
 			foreach (Transform child in b.transform) {
 				Vector2 currentPos = RoundVector (child.position);
 				Grid.grid[(int)currentPos.x, (int)currentPos.y] = null;
 				Grid.grid [(int)currentPos.x, (int)currentPos.y - 1] = child;
-				Debug.Log ("Mino placed at: " + (int)currentPos.x + "," + (int)currentPos.y);
 			}
 			Vector2 objectPosition = b.transform.position;
 			int blockMove = Mathf.RoundToInt(b.transform.position.y) - 1;
@@ -130,8 +134,13 @@ public class Block : GridManager
 			Grid.grid [(int)newBlockPos.x, (int)newBlockPos.y] = this.transform;
 		}
 		hideArrows ();
-		ClearCheck (b);
+		foreach (Transform child in b.transform) {
+			Vector2 currentPos = RoundVector (child.position);
+			Grid.grid [(int)currentPos.x, (int)currentPos.y] = child;
+			child.gameObject.AddComponent<PlacedBlock>();
+		}
 		Destroy (this.GetComponent<Block> ());
+		ClearCheck (b.transform);
 	}
 		
 	public void moveBlockLeft (Block b){
@@ -149,14 +158,19 @@ public class Block : GridManager
 			Vector2 newBlockPos = RoundVector(transform.position);
 			Grid.grid [(int)newBlockPos.x, (int)newBlockPos.y] = this.transform;
 		}
+		foreach (Transform child in b.transform) {
+			Vector2 currentPos = RoundVector (child.position);
+			Grid.grid [(int)currentPos.x, (int)currentPos.y] = child;
+			child.gameObject.AddComponent<PlacedBlock>();
+		}
 		hideArrows ();
-		ClearCheck (b);
 		Destroy (this.GetComponent<Block> ());
+		ClearCheck (b.transform);
 			
 	}
 		
 	public void moveBlockRight (Block b){
-
+		
 		while (IsMoveValid (b.transform, 1, 0)) {
 			foreach (Transform child in b.transform) {
 				Vector2 currentPos = RoundVector (child.position);
@@ -170,19 +184,30 @@ public class Block : GridManager
 			Vector2 newBlockPos = RoundVector(transform.position);
 			Grid.grid [(int)newBlockPos.x, (int)newBlockPos.y] = this.transform;
 		}
-
+		foreach (Transform child in b.transform) {
+			Vector2 currentPos = RoundVector (child.position);
+			Grid.grid [(int)currentPos.x, (int)currentPos.y] = child;
+			Debug.Log ("Sprite at " + (int)currentPos.x + "," + (int)currentPos.y + "became PlacedBlock.");
+			child.gameObject.AddComponent<PlacedBlock>();
+		}
 		hideArrows ();
-		ClearCheck (b);
 		Destroy (this.GetComponent<Block> ());
+		ClearCheck (b.transform);
 	}
 
-	void ClearCheck(Block b){
-		Vector2 newBlockPos = RoundVector(b.transform.position);
+	void ClearCheck(Transform b){
+		/*Vector2 newBlockPos = RoundVector(b.transform.position);
 		UpdateGrid ((int)newBlockPos.x, (int)newBlockPos.y);
-		foreach (Transform child in b.transform) {
+		foreach (Transform child in b) {
 			Vector2 currentPos = RoundVector (child.position);
 			UpdateGrid ((int)currentPos.x, (int)currentPos.y);
 		}
+		Try #2
+		Vector2 currentPos = RoundVector (b.position);
+		UpdateGrid ((int)currentPos.x, (int)currentPos.y);
+		*/
+		Debug.Log("I ran.");
+		UpdateGrid (b);
 	}
 
 	// Check if position is within border
@@ -380,7 +405,6 @@ public class Block : GridManager
 		arrowButton1.GetComponentInChildren<CanvasRenderer> ().SetAlpha (1);
 		arrowButton2.enabled = true;
 		arrowButton2.GetComponentInChildren<CanvasRenderer> ().SetAlpha (1);
-		Debug.Log("present");
 	}
 
 	void showArrows(string arrow){

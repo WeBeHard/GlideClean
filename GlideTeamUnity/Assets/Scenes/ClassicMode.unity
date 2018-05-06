@@ -1163,7 +1163,7 @@ MonoBehaviour:
     - {fileID: 0}
   fullColumns: 
   fullRows: 
-  testList: []
+  blockList: []
   stored: 0
   finished: 0
   upButton: {fileID: 0}
@@ -1201,7 +1201,6 @@ GameObject:
   - component: {fileID: 449608952}
   - component: {fileID: 449608957}
   - component: {fileID: 449608958}
-  - component: {fileID: 449608959}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -1303,21 +1302,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   fadeOutTexture: {fileID: 2800000, guid: fe53df8a39a815c48af358a62e552710, type: 3}
   fadeSpeed: 0.8
---- !u!114 &449608959
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 449608951}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 54b2fe8d441185b45a773e1809be2502, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  currentGameMode: 0
-  gameModeHiScore: 0
-  currentScore: 0
-  InGameScore: {fileID: 2102523463}
 --- !u!1 &532271651
 GameObject:
   m_ObjectHideFlags: 0
@@ -2788,6 +2772,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2019745829}
   - component: {fileID: 2019745830}
+  - component: {fileID: 2019745831}
   m_Layer: 0
   m_Name: GameController
   m_TagString: Untagged
@@ -2819,6 +2804,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0c33f59761650fb4e92a60612d85fd87, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &2019745831
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 2019745828}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 54b2fe8d441185b45a773e1809be2502, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  currentGameMode: 0
+  gameModeHiScore: 0
+  currentScore: 0
+  InGameScore: {fileID: 2102523463}
 --- !u!1 &2073217949
 GameObject:
   m_ObjectHideFlags: 0
@@ -2963,7 +2963,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: 12345
+  m_Text: 0
 --- !u!222 &2102523464
 CanvasRenderer:
   m_ObjectHideFlags: 0

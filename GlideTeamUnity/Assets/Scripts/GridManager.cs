@@ -17,16 +17,16 @@ public class GridManager : MonoBehaviour {
 	public List<int> fullRows = new List<int>();
 
 	Object test = new Object();
-	public List<Object> testList = new List<Object> ();
+	public List<PlacedBlock> blockList;
 
 
 	public bool InsideBorder(Vector2 pos)
 	{
-		return ((int)pos.x >= 0 && (int)pos.x < 10 && (int)pos.y >= 0);
+		return ((int)pos.x >= 0 && (int)pos.x < 10 && (int)pos.y >= 0 && (int)pos.y < 10);
 	}
 
 
-	IEnumerator CheckFullGrid(int i, int j)
+	IEnumerator CheckFullGrid(Transform b)
     {
 		/*
         for (int x = i; x < 10; x++)
@@ -44,24 +44,38 @@ public class GridManager : MonoBehaviour {
 				fullRows.Add(y);
 			}
 		}*/
-		if(IsColumnFull(i))
-			fullColumns.Add(i);
 
-		if (IsRowFull (j))
-			fullRows.Add (j);
-		
-        for (int n = 0; n < fullRows.Count; ++n)
+		blockList.Clear();
+		PlacedBlock[] placedBlocks = FindObjectsOfType<PlacedBlock> ();
+
+		for (int i = 0; i < placedBlocks.Length; i++)
+			blockList.Add (placedBlocks [i]);
+		foreach (Transform child in b.transform) {
+			Vector2 currentPos = child.position;
+			int i = (int) currentPos.x;
+			int j = (int)currentPos.y;
+			if (IsColumnFull (i))
+				fullColumns.Add (i);
+
+			if (IsRowFull (j))
+				fullRows.Add (j);
+		}
+		while (fullRows.Count != 0)
         {
-            DeleteRow(fullRows[n]);
+			Debug.Log (fullRows.Count);
+			DeleteRow(fullRows[0]);
+			fullRows.Remove(fullRows[0]);
 			GameObject.Find ("Sound Manager").GetComponent<SoundManager> ().StartLineClearingSound(); //clear sound
-			yield return new WaitForSeconds(GameObject.Find ("Sound Manager").GetComponent<SoundManager> ().soundSource.clip.length);
+			//yield return new WaitForSeconds(GameObject.Find ("Sound Manager").GetComponent<SoundManager> ().soundSource.clip.length);
         }
 
-        for (int m = 0; m < fullColumns.Count; ++m)
+		while (fullColumns.Count != 0)
         {
-            DeleteColumn(fullColumns[m]);
+			Debug.Log (fullColumns.Count);
+            DeleteColumn(fullColumns[0]);
+			fullColumns.Remove (fullColumns [0]);
 			GameObject.Find ("Sound Manager").GetComponent<SoundManager> ().StartLineClearingSound(); //clear sound
-			yield return new WaitForSeconds(GameObject.Find ("Sound Manager").GetComponent<SoundManager> ().soundSource.clip.length);
+			//yield return new WaitForSeconds(GameObject.Find ("Sound Manager").GetComponent<SoundManager> ().soundSource.clip.length);
         }
 
         fullRows.Clear();
@@ -71,7 +85,7 @@ public class GridManager : MonoBehaviour {
     }
 
 
-    public bool IsRowFull(int y)
+	public bool IsRowFull(int y)
     {
         for (int x = 0; x < 10; ++x)
         {
@@ -81,17 +95,28 @@ public class GridManager : MonoBehaviour {
                 return false;
             }
         }
+		Debug.Log ("Row " + y + " is being cleared.");
         return true;
     }
 
-    public void DeleteRow(int y)
+	public void DeleteRow(int y)
     {
-        scoreManager.scoreChart.UpdateScore(100); //add score, accomodate score modifer block
+		GameObject.Find ("GameController").GetComponent<scoreManager> ().UpdateScore(100); //add score, accomodate score modifer block
         for (int x = 0; x < 10; x++)
         {
         /*    Destroy(gameGridCol[x].row[y].gameObject);
             gameGridCol[x].row[y] = null;*/
-			Grid.grid [x, y] = null;
+			for (int i = 0; i < blockList.Count; i++) {
+				if (blockList[i].yPos == y) {
+					Debug.Log ("Destroying block at: " + blockList[i].xPos + "," + blockList[i].yPos);
+					Grid.grid [blockList[i].xPos, blockList[i].yPos] = null;
+					PlacedBlock removeMe = blockList [i];
+					Debug.Log (removeMe.transform.childCount);
+					Destroy (removeMe.gameObject);
+					blockList.Remove (removeMe);
+					i--;
+				}
+			}
         }
 		Debug.Log ("Cleared Row: " + y);
     }
@@ -110,15 +135,32 @@ public class GridManager : MonoBehaviour {
         return true;
     }
 
-    public void DeleteColumn(int x)
+	public void DeleteColumn(int x)
     {
-        scoreManager.scoreChart.UpdateScore(100); //add score, accomodate score modifer block
-        for (int y = 0; y < 0; y++)
+		GameObject.Find ("GameController").GetComponent<scoreManager> ().UpdateScore(100); //add score, accomodate score modifer block
+        for (int y = 0; y < 10; y++)
 		{
 			/*    Destroy(gameGridCol[x].row[y].gameObject);
             gameGridCol[x].row[y] = null;*/
-			Destroy (Grid.grid [x, y].gameObject);
 			Grid.grid [x, y] = null;
+			/*
+			for (int i = 0; i < blocks.Length; i++) {
+				if (blocks[i].xPos == x)
+					Destroy(blocks[i].gameObject);
+			} 
+			*/
+			for (int i = 0; i < blockList.Count; i++) {
+				if (blockList [i].xPos == x) {
+					Debug.Log ("Destroying block at: " + x + "," + y);
+					PlacedBlock removeMe = blockList [i];
+					if (removeMe.transform.childCount != 0) {
+						removeMe.transform.DetachChildren();
+					}
+					Destroy (removeMe.gameObject);
+					blockList.Remove (removeMe);
+					i--;
+				}
+			}
         }
 		Debug.Log ("Cleared Column: " + x);
     }
@@ -174,7 +216,7 @@ public class GridManager : MonoBehaviour {
 
 			//if (gameGridCol [(int)v.x].row [(int)v.y] != null && gameGridCol [(int)v.x].row [(int)v.y] != obj) {
 			if(Grid.grid[(int)(v.x), (int)(v.y)] != null && !Grid.grid[(int)(v.x), (int)(v.y)].IsChildOf(obj)){
-				Debug.Log ("Collision at " + v.x + "," + v.y + ".");
+				Debug.Log ("Collision at: " + v.x + "," + v.y);
 				return false;
 			}
 
@@ -183,9 +225,9 @@ public class GridManager : MonoBehaviour {
 		return true;
 	}
 
-	public void UpdateGrid(int blockX, int blockY)
+	public void UpdateGrid(Transform b)
 	{
-		StartCoroutine (CheckFullGrid (blockX, blockY));
+		StartCoroutine (CheckFullGrid (b));
 	}
 
 

@@ -67,11 +67,13 @@
      <Compile Include="Assets\Scripts\openMenu.cs" />
      <Compile Include="Assets\Scripts\Options.cs" />
      <Compile Include="Assets\Scripts\OurPlayerStats.cs" />
+     <Compile Include="Assets\Scripts\PlacedBlock.cs" />
      <Compile Include="Assets\Scripts\RoundVector.cs" />
      <Compile Include="Assets\Scripts\scoreManager.cs" />
      <Compile Include="Assets\Scripts\SoundManager.cs" />
      <Compile Include="Assets\Scripts\Spawner.cs" />
      <Compile Include="Assets\Scripts\SpriteController.cs" />
+     <Compile Include="Assets\Scripts\TimeAttackSoundManager.cs" />
      <Compile Include="Assets\Scripts\TitleScreen.cs" />
  <Reference Include="UnityEngine.UI">
  <HintPath>C:/Program Files/Unity/Editor/Data/UnityExtensions/Unity/GUISystem/UnityEngine.UI.dll</HintPath>
