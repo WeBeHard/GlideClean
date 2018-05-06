@@ -113,7 +113,10 @@ public class Block : GridManager
 		foreach (Transform child in b.transform) {
 			Vector2 currentPos = RoundVector (child.position);
 			Grid.grid [(int)currentPos.x, (int)currentPos.y] = child;
+			Debug.Log ("Child at: " + (int)currentPos.x + "," + (int)currentPos.y);
 			child.gameObject.AddComponent<PlacedBlock>();
+			child.gameObject.GetComponent<PlacedBlock>().setX((int)currentPos.x);
+			child.gameObject.GetComponent<PlacedBlock>().setY((int)currentPos.y);
 		}
 		Destroy (this.GetComponent<Block> ());
 		ClearCheck (b.transform);
@@ -134,15 +137,19 @@ public class Block : GridManager
 			Grid.grid [(int)newBlockPos.x, (int)newBlockPos.y] = this.transform;
 		}
 		hideArrows ();
+		Debug.Log ("Child count" + b.transform.childCount);
 		foreach (Transform child in b.transform) {
 			Vector2 currentPos = RoundVector (child.position);
 			Grid.grid [(int)currentPos.x, (int)currentPos.y] = child;
+			Debug.Log ("Child at: " + (int)currentPos.x + "," + (int)currentPos.y);
 			child.gameObject.AddComponent<PlacedBlock>();
+			child.gameObject.GetComponent<PlacedBlock>().setX((int)currentPos.x);
+			child.gameObject.GetComponent<PlacedBlock>().setY((int)currentPos.y);	
 		}
 		Destroy (this.GetComponent<Block> ());
 		ClearCheck (b.transform);
 	}
-		
+
 	public void moveBlockLeft (Block b){
 
 		while (IsMoveValid (b.transform, -1, 0)) {
@@ -162,6 +169,8 @@ public class Block : GridManager
 			Vector2 currentPos = RoundVector (child.position);
 			Grid.grid [(int)currentPos.x, (int)currentPos.y] = child;
 			child.gameObject.AddComponent<PlacedBlock>();
+			child.gameObject.GetComponent<PlacedBlock>().setX((int)currentPos.x);
+			child.gameObject.GetComponent<PlacedBlock>().setY((int)currentPos.y);
 		}
 		hideArrows ();
 		Destroy (this.GetComponent<Block> ());
@@ -189,6 +198,8 @@ public class Block : GridManager
 			Grid.grid [(int)currentPos.x, (int)currentPos.y] = child;
 			Debug.Log ("Sprite at " + (int)currentPos.x + "," + (int)currentPos.y + "became PlacedBlock.");
 			child.gameObject.AddComponent<PlacedBlock>();
+			child.gameObject.GetComponent<PlacedBlock>().setX((int)currentPos.x);
+			child.gameObject.GetComponent<PlacedBlock>().setY((int)currentPos.y);
 		}
 		hideArrows ();
 		Destroy (this.GetComponent<Block> ());
@@ -206,7 +217,9 @@ public class Block : GridManager
 		Vector2 currentPos = RoundVector (b.position);
 		UpdateGrid ((int)currentPos.x, (int)currentPos.y);
 		*/
-		Debug.Log("I ran.");
+	/*	foreach (Transform child in b.transform) {
+			child.gameObject.AddComponent<PlacedBlock>();
+		}*/
 		UpdateGrid (b);
 	}
 

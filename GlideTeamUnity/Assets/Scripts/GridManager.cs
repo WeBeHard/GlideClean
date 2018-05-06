@@ -47,17 +47,20 @@ public class GridManager : MonoBehaviour {
 
 		blockList.Clear();
 		PlacedBlock[] placedBlocks = FindObjectsOfType<PlacedBlock> ();
-
-		for (int i = 0; i < placedBlocks.Length; i++)
+		Debug.Log ("Placed Block Array: " + placedBlocks.Length);
+		for (int i = 0; i < placedBlocks.Length; i++){
+			Debug.Log("Block at " + placedBlocks[i].xPos + "," + placedBlocks[i].yPos + " was found");
 			blockList.Add (placedBlocks [i]);
+		}
+		Debug.Log ("Placed Block Count: " + blockList.Count);
 		foreach (Transform child in b.transform) {
 			Vector2 currentPos = child.position;
 			int i = (int) currentPos.x;
 			int j = (int)currentPos.y;
-			if (IsColumnFull (i))
+			if (IsColumnFull (i) && !fullColumns.Contains(i))
 				fullColumns.Add (i);
 
-			if (IsRowFull (j))
+			if (IsRowFull (j) && !fullRows.Contains(j) )
 				fullRows.Add (j);
 		}
 		while (fullRows.Count != 0)
@@ -71,8 +74,8 @@ public class GridManager : MonoBehaviour {
 
 		while (fullColumns.Count != 0)
         {
-			Debug.Log (fullColumns.Count);
-            DeleteColumn(fullColumns[0]);
+				Debug.Log (fullColumns.Count);
+	            DeleteColumn(fullColumns[0]);
 			fullColumns.Remove (fullColumns [0]);
 			GameObject.Find ("Sound Manager").GetComponent<SoundManager> ().StartLineClearingSound(); //clear sound
 			//yield return new WaitForSeconds(GameObject.Find ("Sound Manager").GetComponent<SoundManager> ().soundSource.clip.length);
@@ -153,9 +156,8 @@ public class GridManager : MonoBehaviour {
 				if (blockList [i].xPos == x) {
 					Debug.Log ("Destroying block at: " + x + "," + y);
 					PlacedBlock removeMe = blockList [i];
-					if (removeMe.transform.childCount != 0) {
-						removeMe.transform.DetachChildren();
-					}
+					Debug.Log ("I have " + removeMe.transform.childCount + " children.");
+					removeMe.transform.DetachChildren();
 					Destroy (removeMe.gameObject);
 					blockList.Remove (removeMe);
 					i--;

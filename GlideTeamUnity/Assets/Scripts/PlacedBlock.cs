@@ -12,6 +12,14 @@ public class PlacedBlock : MonoBehaviour {
 		xPos = (int) transform.position.x;
 		yPos = (int) transform.position.y;
 	}
+
+	public void setX(int newX){
+		xPos = newX;
+	}
+
+	public void setY(int newY){
+		yPos = newY;
+	}
 	/*
 	int getX(){
 		return xPos;
