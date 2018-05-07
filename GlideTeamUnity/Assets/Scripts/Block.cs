@@ -5,6 +5,7 @@
 
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class Block : GridManager
@@ -17,6 +18,9 @@ public class Block : GridManager
 	public int maxY;
 	public int maxX;
 
+    public GameObject gameOverPanel;
+    public Text highScore;
+    public Text currentScore;
 
 	public Button upButton;
 	public Button downButton;
@@ -33,7 +37,7 @@ public class Block : GridManager
 		hideArrows ();
 		maxX = (int)GetComponent<Collider2D> ().bounds.size.x - 1;
 		maxY = (int)GetComponent<Collider2D> ().bounds.size.y - 1;
-		
+        gameOverPanel.SetActive(false);
 	}
 
 	void OnMouseDrag()
@@ -477,73 +481,92 @@ public class Block : GridManager
 		return newPos;
 	}	
 
-bool GameOver()
-{
-	if (Lose() == true)
-	{
-		Debug.Log("Game Over!");
-		return true;
-	}
-	return false;
-}
+    void GameOver()
+    {
+	    if (Lose() == true)
+	    {
+            //Debug.Log("Game Over!");
+            gameOverPanel.SetActive(true);
+            currentScore.text = FindObjectOfType<scoreManager>().currentScore.ToString();
+            highScore.text = FindObjectOfType<scoreManager>().gameModeHiScore.ToString();
+        }
+    }
 
-bool Lose()
-{
-	Block[] blocks = FindObjectsOfType<Block>();
-	List<Block> activeBlocks = new List<Block>();
+    bool Lose()
+    {
+	    Block[] blocks = FindObjectsOfType<Block>();
+	    List<Block> activeBlocks = new List<Block>();
 
-	foreach (Block block in blocks)
-	{
-		if (block.finished == false)
-		{
-			activeBlocks.Add(block);
-		}
-	}
-	//Debug.Log(activeBlocks.Count);
-	if(activeBlocks.Count == 0)
-	{
-		return false;
-	}
-	foreach (Block block in activeBlocks)
-	{
-		if (CanMove(block) == true)
-		{
-			return false;
-		}
-	}
-	return true;
-}
+	    foreach (Block block in blocks)
+	    {
+		    if (block.finished == false)
+		    {
+			    activeBlocks.Add(block);
+		    }
+	    }
+	    //Debug.Log(activeBlocks.Count);
+	    if(activeBlocks.Count == 0)
+	    {
+		    return false;
+	    }
+	    foreach (Block block in activeBlocks)
+	    {
+		    if (CanMove(block) == true)
+		    {
+			    return false;
+		    }
+	    }
+	    return true;
+    }
 
-bool CanMove(Block block)
-{
-	// Check if block can be placed in grid
-	Block checkBlock = Instantiate(block);
-	checkBlock.gameObject.SetActive(false);
-	for (int i = 0; i < 10; i++)
-	{
-		for (int j = 0; j < 10; j++)
-		{
-			if (Grid.grid[i, j] == null && (i == 0 || i == 9 - maxX || j == 0 || j == 9 - maxY))
-			{
-				Vector2 vect = new Vector2(i, j);
-				checkBlock.transform.position = vect;
-				//foreach(Transform childBlock in checkBlock.transform)
-				//{
-				//    //if(childBlock.transform.position.x > 10 || chil)
-				//}
-				if (checkBlock.IsInGrid() == true)
-				{
-					Destroy(checkBlock.gameObject);
-					return true;
-				}
-				//if(checkBlock.IsInGrid() == false)
-				//{
+    bool CanMove(Block block)
+    {
+	    // Check if block can be placed in grid
+	    Block checkBlock = Instantiate(block);
+	    checkBlock.gameObject.SetActive(false);
+	    for (int i = 0; i < 10; i++)
+	    {
+		    for (int j = 0; j < 10; j++)
+		    {
+			    if (Grid.grid[i, j] == null && (i == 0 || i == 9 - maxX || j == 0 || j == 9 - maxY))
+			    {
+				    Vector2 vect = new Vector2(i, j);
+				    checkBlock.transform.position = vect;
+				    //foreach(Transform childBlock in checkBlock.transform)
+				    //{
+				    //    //if(childBlock.transform.position.x > 10 || chil)
+				    //}
+				    if (checkBlock.IsInGrid() == true)
+				    {
+					    Destroy(checkBlock.gameObject);
+					    return true;
+				    }
+				    //if(checkBlock.IsInGrid() == false)
+				    //{
 
-				//}
-			}
-		}
-	}
-	return false;
-}
+				    //}
+			    }
+		    }
+	    }
+	    return false;
+    }
 
+    void Disable()
+    {
+        Block[] blocks = FindObjectsOfType<Block>();
+        List<Block> activeBlocks = new List<Block>();
+
+        foreach (Block block in blocks)
+        {
+            if (block.finished == false)
+            {
+                activeBlocks.Add(block);
+            }
+        }
+
+        for(int i = 0; i < activeBlocks.Count; i++)
+        {
+            Destroy(activeBlocks[i].GetComponent<Block>());
+        }
+    }
 }

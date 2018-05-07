@@ -33,6 +33,7 @@ public class GameManagerTest : MonoBehaviour {
 		leftSpawner = GameObject.Find("LeftSpawner").GetComponent<Spawner>();
 		middleSpawner = GameObject.Find("MiddleSpawner").GetComponent<Spawner>();
 		rightSpawner = GameObject.Find("RightSpawner").GetComponent<Spawner>();
+        //gameOverPanel.SetActive(false);
 		//holder = FindObjectOfType<Holder>();
 	}
 
