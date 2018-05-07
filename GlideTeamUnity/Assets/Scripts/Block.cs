@@ -15,8 +15,8 @@ public class Block : GridManager
 	Vector2 tempPosition;
 	public bool stored;
 	public bool finished;
-	public int maxY;
-	public int maxX;
+	public static int offSetY;
+	public static int offSetX;
 
     //public GameObject gameOverPanel;
     public Text highScore;
@@ -35,8 +35,10 @@ public class Block : GridManager
 		stored = false;
 		finished = false;
 		hideArrows ();
-		maxX = (int)GetComponent<Collider2D> ().bounds.size.x - 1;
-		maxY = (int)GetComponent<Collider2D> ().bounds.size.y - 1;
+	//	maxX = (int)GetComponent<Collider2D> ().bounds.size.x - 1;
+	//	maxY = (int)GetComponent<Collider2D> ().bounds.size.y - 1;
+
+		GameOver ();
        // gameOverPanel.SetActive(false);
 	}
 
@@ -499,8 +501,8 @@ public class Block : GridManager
 			}
             //gameOverPanel.SetActive(true);
 			FindObjectOfType<GameManagerTest>().gameOverPanel.SetActive(true);
-            currentScore.text = FindObjectOfType<scoreManager>().currentScore.ToString();
-            highScore.text = FindObjectOfType<scoreManager>().gameModeHiScore.ToString();
+		//GameObject.Find<GameObject>("Current Score").GetComponent<Text>().text	 = FindObjectOfType<scoreManager>().currentScore.ToString();
+		GameObject.Find ("GameController").GetComponent<scoreManager>().UpdateStats();
         }
     }
 
@@ -536,29 +538,63 @@ public class Block : GridManager
 	    // Check if block can be placed in grid
 	    Block checkBlock = Instantiate(block);
 	    checkBlock.gameObject.SetActive(false);
+		Debug.Log ("Off Set X: " + offSetX + " Off Set Y: " + offSetY);
 	    for (int i = 0; i < 10; i++)
 	    {
-		    for (int j = 0; j < 10; j++)
-		    {
-			    if (Grid.grid[i, j] == null && (i == 0 || i == 9 - maxX || j == 0 || j == 9 - maxY))
-			    {
-				    Vector2 vect = new Vector2(i, j);
-				    checkBlock.transform.position = vect;
-				    //foreach(Transform childBlock in checkBlock.transform)
-				    //{
-				    //    //if(childBlock.transform.position.x > 10 || chil)
-				    //}
-				    if (checkBlock.IsInGrid() == true)
-				    {
-					    Destroy(checkBlock.gameObject);
-					    return true;
-				    }
-				    //if(checkBlock.IsInGrid() == false)
-				    //{
+			for (int j = 0; j < 10; j++) {
+				if (offSetX >= 0 && offSetY >= 0) {
+					if (Grid.grid [i, j] == null && (i == 0 || i == 9 - offSetX || j == 0 || j == 9 - offSetY)) {
+						Vector2 vect = new Vector2 (i, j);
+						checkBlock.transform.position = vect;
 
-				    //}
-			    }
-		    }
+						if (checkBlock.IsInGrid () == true && IsValidGridPosition (checkBlock.transform)) {
+							Debug.Log ("Iteration: " + i + "," + j);
+							Debug.Log ("True at" + (int)checkBlock.transform.position.x + "," + (int)checkBlock.transform.position.y);
+							Destroy (checkBlock.gameObject);
+							return true;
+						}
+					}
+				}
+
+			if (offSetX <= 0 && offSetY >= 0) {
+				if (Grid.grid [i, j] == null && (i == 0 + offSetX|| i == 9 || j == 0 || j == 9 - offSetY)) {
+					Vector2 vect = new Vector2 (i, j);
+					checkBlock.transform.position = vect;
+
+					if (checkBlock.IsInGrid () == true && IsValidGridPosition (checkBlock.transform)) {
+						Debug.Log ("True at" + (int)checkBlock.transform.position.x + "," + (int)checkBlock.transform.position.y);
+						Destroy (checkBlock.gameObject);
+						return true;
+					}
+				}
+			}
+
+			if (offSetX >= 0 && offSetY <= 0) {
+				if (Grid.grid [i, j] == null && (i == 0 || i == 9 - offSetX || j == 0 - offSetY || j == 9)) {
+					Vector2 vect = new Vector2 (i, j);
+					checkBlock.transform.position = vect;
+
+					if (checkBlock.IsInGrid () == true && IsValidGridPosition (checkBlock.transform)) {
+						Debug.Log ("True at" + (int)checkBlock.transform.position.x + "," + (int)checkBlock.transform.position.y);
+						Destroy (checkBlock.gameObject);
+						return true;
+					}
+				}
+			}
+
+			if (offSetX <= 0 && offSetY <= 0) {
+				if (Grid.grid [i, j] == null && (i == 0 - offSetX|| i == 9  || j == 0 - offSetY	 || j == 9)) {
+					Vector2 vect = new Vector2 (i, j);
+					checkBlock.transform.position = vect;
+
+					if (checkBlock.IsInGrid () == true && IsValidGridPosition (checkBlock.transform)) {
+						Debug.Log ("True at" + (int)checkBlock.transform.position.x + "," + (int)checkBlock.transform.position.y);
+						Destroy (checkBlock.gameObject);
+						return true;
+					}
+				}
+			}
+			}
 	    }
 	    return false;
     }
