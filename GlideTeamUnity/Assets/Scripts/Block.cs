@@ -18,7 +18,7 @@ public class Block : GridManager
 	public int maxY;
 	public int maxX;
 
-    public GameObject gameOverPanel;
+    //public GameObject gameOverPanel;
     public Text highScore;
     public Text currentScore;
 
@@ -37,7 +37,7 @@ public class Block : GridManager
 		hideArrows ();
 		maxX = (int)GetComponent<Collider2D> ().bounds.size.x - 1;
 		maxY = (int)GetComponent<Collider2D> ().bounds.size.y - 1;
-        gameOverPanel.SetActive(false);
+       // gameOverPanel.SetActive(false);
 	}
 
 	void OnMouseDrag()
@@ -485,8 +485,20 @@ public class Block : GridManager
     {
 	    if (Lose() == true)
 	    {
-            //Debug.Log("Game Over!");
-            gameOverPanel.SetActive(true);
+            Debug.Log("Game Over!");
+			SpriteRenderer[] gridPiece = FindObjectsOfType<SpriteRenderer> ();
+			Debug.Log (gridPiece.Length);
+			for (int i = 0; i < gridPiece.Length; i++){
+					Destroy(gridPiece[i].gameObject);
+			}
+			PlacedBlock[] placedBlocks = FindObjectsOfType<PlacedBlock> ();
+			Debug.Log (placedBlocks.Length);
+			Destroy (GameObject.Find ("Grid"));
+			for (int i = 0; i < placedBlocks.Length; i++){
+				Destroy(placedBlocks[i].gameObject);
+			}
+            //gameOverPanel.SetActive(true);
+			FindObjectOfType<GameManagerTest>().gameOverPanel.SetActive(true);
             currentScore.text = FindObjectOfType<scoreManager>().currentScore.ToString();
             highScore.text = FindObjectOfType<scoreManager>().gameModeHiScore.ToString();
         }

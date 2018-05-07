@@ -1,8 +1,71 @@
 ﻿using System.Collections;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class AchievementManager : MonoBehaviour
 {
+	void Start(){
+		checkAllAchievments();
+		if (PlayerPrefs.GetInt ("AchievementGAMEOVER", 0) == 1)
+			GameObject.Find ("GameOverCheck").GetComponent<Toggle>().isOn = true;
+		else
+			GameObject.Find ("GameOverCheck").GetComponent<Toggle>().isOn = false;
+
+		if (PlayerPrefs.GetInt ("AchievementTEAMTEN", 0) == 1)
+			GameObject.Find ("TeamTenCheck").GetComponent<Toggle>().isOn = true;
+		else
+			GameObject.Find ("TeamTenCheck").GetComponent<Toggle>().isOn = false;
+
+		if (PlayerPrefs.GetInt ("AchievementPLAYERCENTURY", 0) == 1)
+			GameObject.Find ("PlayerCenturyCheck").GetComponent<Toggle>().isOn = true;
+		else
+			GameObject.Find ("PlayerCenturyCheck").GetComponent<Toggle>().isOn = false;
+
+		if (PlayerPrefs.GetInt ("AchievementGRANDMASTER", 0) == 1)
+			GameObject.Find ("GrandMasterCheck").GetComponent<Toggle>().isOn = true;
+		else
+			GameObject.Find ("GrandMasterCheck").GetComponent<Toggle>().isOn = false;
+
+		if (PlayerPrefs.GetInt ("AchievementPARTICIPANT", 0) == 1)
+			GameObject.Find ("ParticipantCheck").GetComponent<Toggle>().isOn = true;
+		else
+			GameObject.Find ("ParticipantCheck").GetComponent<Toggle>().isOn = false;
+
+		if (PlayerPrefs.GetInt ("AchievementPERSISTENT", 0) == 1)
+			GameObject.Find ("PersistentCheck").GetComponent<Toggle>().isOn = true;
+		else
+			GameObject.Find ("PersistentCheck").GetComponent<Toggle>().isOn = false;
+
+		if (PlayerPrefs.GetInt ("AchievementUNYIELDING", 0) == 1)
+			GameObject.Find ("UnyieldingCheck").GetComponent<Toggle>().isOn = true;
+		else
+			GameObject.Find ("UnyieldingCheck").GetComponent<Toggle>().isOn = false;
+
+		if (PlayerPrefs.GetInt ("AchievementSTILLHERE", 0) == 1)
+			GameObject.Find ("StillHereCheck").GetComponent<Toggle>().isOn = true;
+		else
+			GameObject.Find ("StillHereCheck").GetComponent<Toggle>().isOn = false;
+
+		if (PlayerPrefs.GetInt ("AchievementTHECLASSICS", 0) == 1)
+			GameObject.Find ("TheClassicsCheck").GetComponent<Toggle>().isOn = true;
+		else
+			GameObject.Find ("TheClassicsCheck").GetComponent<Toggle>().isOn = false;
+
+		if (PlayerPrefs.GetInt ("AchievementSPEEDDEMON", 0) == 1)
+			GameObject.Find ("SpeedDemonCheck").GetComponent<Toggle>().isOn = true;
+		else
+			GameObject.Find ("SpeedDemonCheck").GetComponent<Toggle>().isOn = false;
+
+		if (PlayerPrefs.GetInt ("AchievementNORULES", 0) == 1)
+			GameObject.Find ("NoRulesCheck").GetComponent<Toggle>().isOn = true;
+		else
+			GameObject.Find ("NoRulesCheck").GetComponent<Toggle>().isOn = false;
+
+		if (PlayerPrefs.GetInt ("AchievementAHIEVEMENTHUNTER", 0) == 1)
+			GameObject.Find ("AchievementHunterCheck").GetComponent<Toggle>().isOn = true;
+		else
+			GameObject.Find ("AchievementHunterCheck").GetComponent<Toggle>().isOn = false;
+	}
     public void checkAllAchievments()
     {
         checkAchievementGAMEOVER();

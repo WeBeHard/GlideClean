@@ -19,7 +19,7 @@ public class GameManagerTest : MonoBehaviour {
 	//bool gameOver = false;
 
 	//// game over panel
-	//public GameObject gameOverPanel;
+	public GameObject gameOverPanel;
 
 	//// pause
 	//public bool pause = false;
@@ -35,6 +35,7 @@ public class GameManagerTest : MonoBehaviour {
 		rightSpawner = GameObject.Find("RightSpawner").GetComponent<Spawner>();
         //gameOverPanel.SetActive(false);
 		//holder = FindObjectOfType<Holder>();
+		gameOverPanel.SetActive(false);
 	}
 
 	// Update is called once per frame
