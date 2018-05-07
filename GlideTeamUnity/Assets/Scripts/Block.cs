@@ -56,7 +56,7 @@ public class Block : GridManager
 		{
 			transform.position = originalPosition;
 			hideArrows ();
-			Debug.Log("returned");
+			//Debug.Log("returned");
 		}
 	}
 
@@ -116,7 +116,7 @@ public class Block : GridManager
 			foreach (Transform child in b.transform) {
 				Vector2 currentPos = RoundVector (child.position);
 				Grid.grid [(int)currentPos.x, (int)currentPos.y] = child;
-				Debug.Log ("Child at: " + (int)currentPos.x + "," + (int)currentPos.y);
+				//Debug.Log ("Child at: " + (int)currentPos.x + "," + (int)currentPos.y);
 				child.gameObject.AddComponent<PlacedBlock> ();
 				child.gameObject.GetComponent<PlacedBlock> ().setX ((int)currentPos.x);
 				child.gameObject.GetComponent<PlacedBlock> ().setY ((int)currentPos.y);
@@ -146,11 +146,11 @@ public class Block : GridManager
 				Grid.grid [(int)newBlockPos.x, (int)newBlockPos.y] = this.transform;
 			}
 			hideArrows ();
-			Debug.Log ("Child count" + b.transform.childCount);
+			//Debug.Log ("Child count" + b.transform.childCount);
 			foreach (Transform child in b.transform) {
 				Vector2 currentPos = RoundVector (child.position);
 				Grid.grid [(int)currentPos.x, (int)currentPos.y] = child;
-				Debug.Log ("Child at: " + (int)currentPos.x + "," + (int)currentPos.y);
+				//Debug.Log ("Child at: " + (int)currentPos.x + "," + (int)currentPos.y);
 				child.gameObject.AddComponent<PlacedBlock> ();
 				child.gameObject.GetComponent<PlacedBlock> ().setX ((int)currentPos.x);
 				child.gameObject.GetComponent<PlacedBlock> ().setY ((int)currentPos.y);	
@@ -212,7 +212,7 @@ public class Block : GridManager
 			foreach (Transform child in b.transform) {
 				Vector2 currentPos = RoundVector (child.position);
 				Grid.grid [(int)currentPos.x, (int)currentPos.y] = child;
-				Debug.Log ("Sprite at " + (int)currentPos.x + "," + (int)currentPos.y + "became PlacedBlock.");
+				//Debug.Log ("Sprite at " + (int)currentPos.x + "," + (int)currentPos.y + "became PlacedBlock.");
 				child.gameObject.AddComponent<PlacedBlock> ();
 				child.gameObject.GetComponent<PlacedBlock> ().setX ((int)currentPos.x);
 				child.gameObject.GetComponent<PlacedBlock> ().setY ((int)currentPos.y);
@@ -256,7 +256,10 @@ public class Block : GridManager
 	bool IsOccupied(int x, int y)
 	{
 		// Current space is occupied only by the actual shape, not by another shape
+	if(x <= 9 && x >= 0 && y <= 9 && y >= 0)
 		return (Grid.grid[x, y] != null && Grid.grid[x, y].parent != transform);
+	else
+		return true;
 	}
 
 	public void SetBlock()
@@ -396,12 +399,12 @@ public class Block : GridManager
 	{
 		if(collision.collider.name == "Holder")
 		{
-			Debug.Log("Exited");
+			//Debug.Log("Exited");
 			// Holder is now empty
 			Holder.full = false;
 			// Block is not stored
 			stored = false;
-			Debug.Log("exit stored: " + stored);
+			//Debug.Log("exit stored: " + stored);
 		}
 	}
 
@@ -490,7 +493,7 @@ bool Lose()
 			activeBlocks.Add(block);
 		}
 	}
-	Debug.Log(activeBlocks.Count);
+	//Debug.Log(activeBlocks.Count);
 	if(activeBlocks.Count == 0)
 	{
 		return false;
@@ -505,71 +508,40 @@ bool Lose()
 	return true;
 }
 
-//bool CanMove(Block block)
-//{
-//	// Check if block can be placed in grid
-//	Block checkBlock = Instantiate(block);
-//	checkBlock.gameObject.SetActive(false);
-//	for (int i = 0; i < 10; i++)
-//	{
-//		for (int j = 0; j < 10; j++)
-//		{
-//			if (Grid.grid[i, j] == null)
-//			{
-//				Vector2 vect = new Vector2(i, j);
-//				checkBlock.transform.position = vect;
-//				//foreach(Transform childBlock in checkBlock.transform)
-//				//{
-//				//    //if(childBlock.transform.position.x > 10 || chil)
-//				//}
-//				if (checkBlock.IsInGrid() == true)
-//				{
-//					Destroy(checkBlock.gameObject);
-//					return true;
-//				}
-//				//if(checkBlock.IsInGrid() == false)
-//				//{
+bool CanMove(Block block)
+{
+	// Check if block can be placed in grid
+	Block checkBlock = Instantiate(block);
+	checkBlock.gameObject.SetActive(false);
+	for (int i = 0; i < 10; i++)
+	{
+		for (int j = 0; j < 10; j++)
+		{
+				int minX = 0;
+				int maxX = 9;
+				int minY = 0;
+				int maxY = 9;
+			if (Grid.grid[i, j] == null && (i == minX || i == maxX || j == minY || j == maxY))
+			{
+				Vector2 vect = new Vector2(i, j);
+				checkBlock.transform.position = vect;
+				//foreach(Transform childBlock in checkBlock.transform)
+				//{
+				//    //if(childBlock.transform.position.x > 10 || chil)
+				//}
+				if (checkBlock.IsInGrid() == true)
+				{
+					Destroy(checkBlock.gameObject);
+					return true;
+				}
+				//if(checkBlock.IsInGrid() == false)
+				//{
 
-//				//}
-//			}
-//		}
-//	}
-//	return false;
-//}
-
-    bool CanMove(Block block)
-    {
-        // Check if block can be placed in grid
-        Block checkBlock = Instantiate(block);
-        checkBlock.gameObject.SetActive(false);
-        for (int i = 0; i < 10; i++)
-        {
-            for (int j = 0; j < 10; j++)
-            {
-                Vector2 blockPosition = new Vector2(i, j);
-                //foreach(Transform childBlock in checkBlock.transform)
-                //{
-                //    if(IsInBorder(new Vector2(childBlock.position.x, childBlock.position.y)) == false)
-                //    {
-                //        // Create new position
-                //        Debug.Log("OUT OF BOUNDS: ");
-                //        blockPosition.y = checkBlock.transform.position.y - 1;
-                //    }
-                //}
-                if(Grid.grid[i, j] == null && (i == 0 || i == 9 || j == 0 || j == 9))
-                {
-                    //Vector2 vect = new Vector2(i, j);
-                    checkBlock.transform.position = blockPosition;
-
-                    if (checkBlock.IsInGrid() == true)
-                    {
-                        Destroy(checkBlock.gameObject);
-                        return true;
-                    }
-                }
-            }
-        }
-        return false;
-    }
+				//}
+			}
+		}
+	}
+	return false;
+}
 
 }

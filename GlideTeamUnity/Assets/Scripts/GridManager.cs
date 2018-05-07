@@ -47,12 +47,12 @@ public class GridManager : MonoBehaviour {
 
 		blockList.Clear();
 		PlacedBlock[] placedBlocks = FindObjectsOfType<PlacedBlock> ();
-		Debug.Log ("Placed Block Array: " + placedBlocks.Length);
+		//Debug.Log ("Placed Block Array: " + placedBlocks.Length);
 		for (int i = 0; i < placedBlocks.Length; i++){
-			Debug.Log("Block at " + placedBlocks[i].xPos + "," + placedBlocks[i].yPos + " was found");
+			//Debug.Log("Block at " + placedBlocks[i].xPos + "," + placedBlocks[i].yPos + " was found");
 			blockList.Add (placedBlocks [i]);
 		}
-		Debug.Log ("Placed Block Count: " + blockList.Count);
+		//Debug.Log ("Placed Block Count: " + blockList.Count);
 		foreach (Transform child in b.transform) {
 			Vector2 currentPos = child.position;
 			int i = (int) currentPos.x;
@@ -65,7 +65,7 @@ public class GridManager : MonoBehaviour {
 		}
 		while (fullRows.Count != 0)
         {
-			Debug.Log (fullRows.Count);
+			//Debug.Log (fullRows.Count);
 			DeleteRow(fullRows[0]);
 			fullRows.Remove(fullRows[0]);
 			 //clear sound
@@ -74,7 +74,7 @@ public class GridManager : MonoBehaviour {
 
 		while (fullColumns.Count != 0)
         {
-				Debug.Log (fullColumns.Count);
+				//Debug.Log (fullColumns.Count);
 	            DeleteColumn(fullColumns[0]);
 			fullColumns.Remove (fullColumns [0]);
 			 //clear sound
@@ -98,7 +98,7 @@ public class GridManager : MonoBehaviour {
                 return false;
             }
         }
-		Debug.Log ("Row " + y + " is being cleared.");
+		//Debug.Log ("Row " + y + " is being cleared.");
         return true;
     }
 
@@ -111,17 +111,17 @@ public class GridManager : MonoBehaviour {
             gameGridCol[x].row[y] = null;*/
 			for (int i = 0; i < blockList.Count; i++) {
 				if (blockList[i].yPos == y) {
-					Debug.Log ("Destroying block at: " + blockList[i].xPos + "," + blockList[i].yPos);
+					//Debug.Log ("Destroying block at: " + blockList[i].xPos + "," + blockList[i].yPos);
 					Grid.grid [blockList[i].xPos, blockList[i].yPos] = null;
 					PlacedBlock removeMe = blockList [i];
-					Debug.Log (removeMe.transform.childCount);
+					//Debug.Log (removeMe.transform.childCount);
 					Destroy (removeMe.gameObject);
 					blockList.Remove (removeMe);
 					i--;
 				}
 			}
         }
-		Debug.Log ("Cleared Row: " + y);
+		//Debug.Log ("Cleared Row: " + y);
     }
 
     public bool IsColumnFull(int x)
@@ -154,7 +154,7 @@ public class GridManager : MonoBehaviour {
 			*/
 			for (int i = 0; i < blockList.Count; i++) {
 				if (blockList [i].xPos == x) {
-					Debug.Log ("Destroying block at: " + x + "," + y);
+					//Debug.Log ("Destroying block at: " + x + "," + y);
 					PlacedBlock removeMe = blockList [i];
 					Debug.Log ("I have " + removeMe.transform.childCount + " children.");
 					removeMe.transform.DetachChildren();
@@ -164,7 +164,7 @@ public class GridManager : MonoBehaviour {
 				}
 			}
         }
-		Debug.Log ("Cleared Column: " + x);
+		//Debug.Log ("Cleared Column: " + x);
     }
 
 
@@ -218,7 +218,7 @@ public class GridManager : MonoBehaviour {
 
 			//if (gameGridCol [(int)v.x].row [(int)v.y] != null && gameGridCol [(int)v.x].row [(int)v.y] != obj) {
 			if(Grid.grid[(int)(v.x), (int)(v.y)] != null && !Grid.grid[(int)(v.x), (int)(v.y)].IsChildOf(obj)){
-				Debug.Log ("Collision at: " + v.x + "," + v.y);
+				//Debug.Log ("Collision at: " + v.x + "," + v.y);
 				return false;
 			}
 
