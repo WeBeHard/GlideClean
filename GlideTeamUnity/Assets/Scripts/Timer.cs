@@ -23,17 +23,16 @@ public class Timer : GridManager {
 	{
 		timeLeft += 15.0f;
 	}
-	
+
 	// Update is called once per frame
 	void Update () {
 		
 		timeLeft -= Time.deltaTime;
-		timeText.text = timeLeft.ToString ("00");
-
+		string timer = ((int)timeLeft).ToString ("00");
+		this.timeText.text = timer;
 		if(timeLeft <= 0)
 		{
-			//game over
-
+			
 		}
 		/*
 		if (fullRows.Count != 0 || fullColumns.Count != 0) {

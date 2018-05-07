@@ -483,7 +483,7 @@ public class Block : GridManager
 		return newPos;
 	}	
 
-    void GameOver()
+void GameOver()
     {
 	    if (Lose() == true)
 	    {
@@ -505,6 +505,29 @@ public class Block : GridManager
 		GameObject.Find ("GameController").GetComponent<scoreManager>().UpdateStats();
         }
     }
+
+void GameOver(bool timer)
+{
+	if (timer)
+	{
+		Debug.Log("Game Over!");
+		SpriteRenderer[] gridPiece = FindObjectsOfType<SpriteRenderer> ();
+		Debug.Log (gridPiece.Length);
+		for (int i = 0; i < gridPiece.Length; i++){
+			Destroy(gridPiece[i].gameObject);
+		}
+		PlacedBlock[] placedBlocks = FindObjectsOfType<PlacedBlock> ();
+		Debug.Log (placedBlocks.Length);
+		Destroy (GameObject.Find ("Grid"));
+		for (int i = 0; i < placedBlocks.Length; i++){
+			Destroy(placedBlocks[i].gameObject);
+		}
+		//gameOverPanel.SetActive(true);
+		FindObjectOfType<GameManagerTest>().gameOverPanel.SetActive(true);
+		//GameObject.Find<GameObject>("Current Score").GetComponent<Text>().text	 = FindObjectOfType<scoreManager>().currentScore.ToString();
+		GameObject.Find ("GameController").GetComponent<scoreManager>().UpdateStats();
+	}
+}
 
     bool Lose()
     {
