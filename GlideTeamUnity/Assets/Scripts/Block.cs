@@ -571,5 +571,4 @@ bool Lose()
         }
         return false;
     }
-
 }
