@@ -942,7 +942,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   musicSource: {fileID: 1436989510}
-  titleScreenMusic: {fileID: 8300000, guid: ae9b579afe5ecc746854a8a947a280a4, type: 3}
+  titleScreenMusic: {fileID: 8300000, guid: a0ff9022fd8dd3c4ebe588659e8c9769, type: 3}
   classicModeMusic: {fileID: 8300000, guid: 5f76dca64f2f08f4998b7bdf267b5911, type: 3}
   timeAttackMusic: {fileID: 8300000, guid: c01ba43ad73e0a9478b9741335a17256, type: 3}
   powersMusic: {fileID: 0}

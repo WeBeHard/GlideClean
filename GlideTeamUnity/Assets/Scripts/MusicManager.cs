@@ -84,10 +84,9 @@ public class MusicManager : MonoBehaviour {
       
         public void AdjustMusic(float value)
         {
-            float temp = value + musicSource.volume;
-            if (temp < 0 || temp > 1)
+            if (value < 0 || value > 1)
                 return;
             else
-                musicSource.volume += value;
+                musicSource.volume = value;
         }
     }

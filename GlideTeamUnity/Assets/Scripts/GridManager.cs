@@ -17,33 +17,19 @@ public class GridManager : MonoBehaviour {
 	public List<int> fullRows = new List<int>();
 
 	Object test = new Object();
-	public List<Object> testList = new List<Object> ();
+	public List<PlacedBlock> blockList;
 
 
 	public bool InsideBorder(Vector2 pos)
 	{
-		return ((int)pos.x >= 0 && (int)pos.x < 10 && (int)pos.y >= 0);
+		return ((int)pos.x >= 0 && (int)pos.x < 10 && (int)pos.y >= 0 && (int)pos.y < 10);
 	}
 
-	public void PlaceShape()
-	{
-		int y = 0;
-		int x = 0;
-        StartCoroutine (CheckFullGrid (y, x));
-    }
 
-
-    IEnumerator CheckFullGrid(int k, int j)
+	IEnumerator CheckFullGrid(Transform b)
     {
-        for (int y = k; y < 10; y++)
-        {
-            if (IsRowFull(y))
-            {
-                fullRows.Add(y);
-            }
-        }
-
-        for (int x = j; x < 10; x++)
+		/*
+        for (int x = i; x < 10; x++)
         {
             if (IsColumnFull(x))
             {
@@ -51,18 +37,48 @@ public class GridManager : MonoBehaviour {
             }
         }
 
-        for (int n = 0; n < fullRows.Count; ++n)
+		for (int y = j; y < 10; y++)
+		{
+			if (IsRowFull(y))
+			{
+				fullRows.Add(y);
+			}
+		}*/
+
+		blockList.Clear();
+		PlacedBlock[] placedBlocks = FindObjectsOfType<PlacedBlock> ();
+		Debug.Log ("Placed Block Array: " + placedBlocks.Length);
+		for (int i = 0; i < placedBlocks.Length; i++){
+			Debug.Log("Block at " + placedBlocks[i].xPos + "," + placedBlocks[i].yPos + " was found");
+			blockList.Add (placedBlocks [i]);
+		}
+		Debug.Log ("Placed Block Count: " + blockList.Count);
+		foreach (Transform child in b.transform) {
+			Vector2 currentPos = child.position;
+			int i = (int) currentPos.x;
+			int j = (int)currentPos.y;
+			if (IsColumnFull (i) && !fullColumns.Contains(i))
+				fullColumns.Add (i);
+
+			if (IsRowFull (j) && !fullRows.Contains(j) )
+				fullRows.Add (j);
+		}
+		while (fullRows.Count != 0)
         {
-            DeleteRow(fullRows[n]);
-			GameObject.Find ("Sound Manager").GetComponent<SoundManager> ().StartLineClearingSound(); //clear sound
-            yield return new WaitForSeconds(0.8f);
+			Debug.Log (fullRows.Count);
+			DeleteRow(fullRows[0]);
+			fullRows.Remove(fullRows[0]);
+			 //clear sound
+			//yield return new WaitForSeconds(GameObject.Find ("Sound Manager").GetComponent<SoundManager>().soundSource.clip.length);
         }
 
-        for (int m = 0; m < fullColumns.Count; ++m)
+		while (fullColumns.Count != 0)
         {
-            DeleteColumn(fullColumns[m]);
-			GameObject.Find ("Sound Manager").GetComponent<SoundManager> ().StartLineClearingSound(); //clear sound
-            yield return new WaitForSeconds(0.8f);
+				Debug.Log (fullColumns.Count);
+	            DeleteColumn(fullColumns[0]);
+			fullColumns.Remove (fullColumns [0]);
+			 //clear sound
+			//yield return new WaitForSeconds(GameObject.Find ("Sound Manager").GetComponent<SoundManager> ().soundSource.clip.length);
         }
 
         fullRows.Clear();
@@ -72,48 +88,83 @@ public class GridManager : MonoBehaviour {
     }
 
 
-    public bool IsRowFull(int y)
+	public bool IsRowFull(int y)
     {
         for (int x = 0; x < 10; ++x)
         {
-            if (gameGridCol[x].row[y] == null)
+           //if (gameGridCol[x].row[y] == null)
+			if(Grid.grid[x,y] == null	)
             {
                 return false;
             }
         }
+		Debug.Log ("Row " + y + " is being cleared.");
         return true;
     }
 
-    public void DeleteRow(int y)
+	public void DeleteRow(int y)
     {
-        scoreManager.scoreChart.UpdateScore(100); //add score, accomodate score modifer block
+		GameObject.Find ("GameController").GetComponent<scoreManager> ().UpdateScore(100); //add score, accomodate score modifer block
         for (int x = 0; x < 10; x++)
         {
-            Destroy(gameGridCol[x].row[y].gameObject);
-            gameGridCol[x].row[y] = null;
+        /*    Destroy(gameGridCol[x].row[y].gameObject);
+            gameGridCol[x].row[y] = null;*/
+			for (int i = 0; i < blockList.Count; i++) {
+				if (blockList[i].yPos == y) {
+					Debug.Log ("Destroying block at: " + blockList[i].xPos + "," + blockList[i].yPos);
+					Grid.grid [blockList[i].xPos, blockList[i].yPos] = null;
+					PlacedBlock removeMe = blockList [i];
+					Debug.Log (removeMe.transform.childCount);
+					Destroy (removeMe.gameObject);
+					blockList.Remove (removeMe);
+					i--;
+				}
+			}
         }
+		Debug.Log ("Cleared Row: " + y);
     }
 
     public bool IsColumnFull(int x)
     {
         for (int y = 0; y < 10; ++y)
-        {
-            if (gameGridCol[x].row[y] == null)
+		{
+			//if (gameGridCol[x].row[y] == null)
+			if(Grid.grid[x,y] == null)
             {
+
                 return false;
             }
         }
         return true;
     }
 
-    public void DeleteColumn(int x)
+	public void DeleteColumn(int x)
     {
-        scoreManager.scoreChart.UpdateScore(100); //add score, accomodate score modifer block
-        for (int y = 0; y < 0; y++)
-        {
-            Destroy(gameGridCol[x].row[y].gameObject);
-            gameGridCol[x].row[y] = null;
+		GameObject.Find ("GameController").GetComponent<scoreManager> ().UpdateScore(100); //add score, accomodate score modifer block
+        for (int y = 0; y < 10; y++)
+		{
+			/*    Destroy(gameGridCol[x].row[y].gameObject);
+            gameGridCol[x].row[y] = null;*/
+			Grid.grid [x, y] = null;
+			/*
+			for (int i = 0; i < blocks.Length; i++) {
+				if (blocks[i].xPos == x)
+					Destroy(blocks[i].gameObject);
+			} 
+			*/
+			for (int i = 0; i < blockList.Count; i++) {
+				if (blockList [i].xPos == x) {
+					Debug.Log ("Destroying block at: " + x + "," + y);
+					PlacedBlock removeMe = blockList [i];
+					Debug.Log ("I have " + removeMe.transform.childCount + " children.");
+					removeMe.transform.DetachChildren();
+					Destroy (removeMe.gameObject);
+					blockList.Remove (removeMe);
+					i--;
+				}
+			}
         }
+		Debug.Log ("Cleared Column: " + x);
     }
 
 
@@ -126,7 +177,7 @@ public class GridManager : MonoBehaviour {
 	{
 		foreach (Transform child in obj) {
 
-			if (child.gameObject.tag.Equals ("Block")) {
+
 
 				Vector2 v = roundVec2 (child.position);
 
@@ -138,91 +189,47 @@ public class GridManager : MonoBehaviour {
 					
 					return false;
 				}
-			}
+
 		}
 		return true;
 	}
 
-
-    #region potential block slide movement (unused)
-    /*
-        public enum DraggedDirection
-        {
-            Up,
-            Down,
-            Right,
-            Left,
-            Point
-        }
-
-        //inside class
-        Vector2 firstPressPos;
-        Vector2 secondPressPos;
-        Vector2 currentSwipe;
-        DraggedDirection direction;
-        public void Swipe()
-        {
-
-            if(Input.touches.Length > 0)
-            {
-                Touch t = Input.GetTouch(0);
-
-                if(t.phase == TouchPhase.Began)
-                {
-                    //save began touch 2d point
-                    firstPressPos = new Vector2(t.position.x,t.position.y);
-                }
-                if (t.phase == TouchPhase.Ended) {
-                    //save ended touch 2d point
-                    secondPressPos = new Vector2 (t.position.x, t.position.y);
-
-                    //create vector from the two points
-                    currentSwipe = new Vector3 (secondPressPos.x - firstPressPos.x, secondPressPos.y - firstPressPos.y);
-
-                    //normalize the 2d vector
-                    currentSwipe.Normalize ();
-                }
-
-                    //swipe upwards
-                    if(currentSwipe.y > 0 && currentSwipe.x > -0.5f && currentSwipe.x < 0.5f)
-                    {
-                        Debug.Log("up swipe");
-                        direction = DraggedDirection.Up;
-                    }
-                    //swipe down
-                    if(currentSwipe.y < 0 && currentSwipe.x > -0.5f && currentSwipe.x < 0.5f)
-                    {
-                        Debug.Log("down swipe");
-                        direction = DraggedDirection.Down;
-                    }
-                    //swipe left
-                    if(currentSwipe.x < 0 && currentSwipe.y > -0.5f && currentSwipe.y < 0.5f)
-                    {
-                        Debug.Log("left swipe");
-                        direction = DraggedDirection.Left;
-                    }
-                    //swipe right
-                    if(currentSwipe.x > 0 && currentSwipe.y > -0.5f && currentSwipe.y < 0.5f)
-                    {
-                        Debug.Log("right swipe");
-                        direction = DraggedDirection.Right;
-                    }
-
-            }
-            //return direction;
-        }
-    */
-    #endregion potential block slide movement (unused)
-
-
-    public void UpdateGrid(Transform obj)
+	public bool IsMoveValid(Transform obj, int xShift, int yShift)
 	{
-		if (IsValidGridPosition (obj)) {
+		/*Vector2 block = roundVec2 (obj.position);
+		block.x = block.x + xShift;
+		block.y = block.y + yShift;
+		if (block.x > 9 || block.y > 9 || block.x < 0 || block.y < 0)
+			return false;
+	
+		if(Grid.grid[(int)(block.x), (int)(block.y)] != null && !Grid.grid[(int)(block.x), (int)(block.y)].IsChildOf(obj)){
+			Debug.Log ("Collision at " + block.x + "," + block.y + ".");
+			return false;
+		}*/
+		foreach (Transform child in obj) {
+		Vector2 v = roundVec2 (child.position);
+			v.x = v.x + xShift;
+			v.y = v.y + yShift;
+			if (v.x > 9 || v.y > 9 || v.x < 0 || v.y < 0)
+				return false;
+			if (!InsideBorder (v)) {
+				return false;
+			}
 
-            // update grid ui ???
-            // if valid position, spawn movement arrows (call class)
+			//if (gameGridCol [(int)v.x].row [(int)v.y] != null && gameGridCol [(int)v.x].row [(int)v.y] != obj) {
+			if(Grid.grid[(int)(v.x), (int)(v.y)] != null && !Grid.grid[(int)(v.x), (int)(v.y)].IsChildOf(obj)){
+				Debug.Log ("Collision at: " + v.x + "," + v.y);
+				return false;
+			}
 
 		}
+
+		return true;
+	}
+
+	public void UpdateGrid(Transform b)
+	{
+		StartCoroutine (CheckFullGrid (b));
 	}
 
 

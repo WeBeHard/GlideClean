@@ -5,12 +5,23 @@ using UnityEngine;
 public class TimeAttackSoundManager : SoundManager {
 
     public AudioClip TimerOut;
+    public float Timer = 5; /// 5 second timer
 
-    public void StartCountDownTimer()
+    public void Update()
     {
-        soundSource.clip = TimerOut;
-        soundSource.Play();
+    
 
+        if (Timer > 5)
+        {
+            Timer -= Time.deltaTime;
+        }
+        else
+        {
+            soundSource.clip = TimerOut;
+            soundSource.Play();
+        }
+    
+        
     }
 
 }
