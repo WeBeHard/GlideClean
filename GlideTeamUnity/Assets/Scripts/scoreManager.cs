@@ -69,7 +69,7 @@ public class scoreManager : MonoBehaviour
             }
         }
         
-        void UpdateStats()
+        public void UpdateStats()
         {
             int temp0 = (PlayerPrefs.GetInt("TotalGamesPlayed")) + 1;
             PlayerPrefs.SetInt("TotalGamesPlayed", temp0);
