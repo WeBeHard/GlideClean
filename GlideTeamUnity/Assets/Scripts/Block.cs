@@ -2,6 +2,7 @@
  * Detect if object was clicked
  * Match object transform to mouse transform
  */
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -10,6 +11,7 @@ public class Block : MonoBehaviour
 	Transform objectPosition;
 	Vector2 originalPosition;
 	Vector2 tempPosition;
+
 	public bool stored;
 	public bool finished;
 
@@ -17,6 +19,8 @@ public class Block : MonoBehaviour
 	public Button downButton;
 	public Button leftButton;
 	public Button rightButton;
+
+    Holder holder;
 
 	void Start()
 	{
@@ -42,12 +46,11 @@ public class Block : MonoBehaviour
 		if (IsInGrid() && stored == false)
 		{
 			SetBlock();
-			finished = true;
-		}
+            GameOver();
+        }
 		else if(stored == true)
 		{
 			StoreBlock();
-			finished = true;
 		}
 		else
 		{
@@ -66,7 +69,7 @@ public class Block : MonoBehaviour
 		return new Vector2(Mathf.Round(vector2d.x), Mathf.Round(vector2d.y));
 	}
 
-	bool IsInGrid()
+	public bool IsInGrid()
 	{
 		// Go through each child block to see if it is in grid and not taking up current space
 		foreach(Transform childBlock in transform)
@@ -94,9 +97,7 @@ public class Block : MonoBehaviour
 				Vector2 currentPos = RoundVector (child.position);
 				Grid.grid [(int)currentPos.x - 1, (int)currentPos.y] = child;
 			}
-
 		}
-
 	}
 		
 	public void moveBlockDown (Transform obj){
@@ -106,9 +107,7 @@ public class Block : MonoBehaviour
 				Vector2 currentPos = RoundVector (child.position);
 				Grid.grid [(int)currentPos.x + 1, (int)currentPos.y] = child;
 			}
-
 		}
-
 	}
 		
 	public void moveBlockLeft (Transform obj){
@@ -118,9 +117,7 @@ public class Block : MonoBehaviour
 				Vector2 currentPos = RoundVector (child.position);
 				Grid.grid [(int)currentPos.x, (int)currentPos.y - 1] = child;
 			}
-
 		}
-
 	}
 		
 	public void moveBlockRight (Transform obj){
@@ -130,16 +127,21 @@ public class Block : MonoBehaviour
 				Vector2 currentPos = RoundVector (child.position);
 				Grid.grid [(int)currentPos.x, (int)currentPos.y + 3] = child;
 			}
-
 		}
-
 	}
-
 	*/
+
 	// Check if position is within border
 	bool IsInBorder(Vector2 position)
 	{
-		return ((int)position.x >= 0 && (int) position.x <=10 && (int) position.y >= 0 && (int) position.y <= 10);
+        //foreach(Transform childBlock in transform)
+        //{
+        //    if((int)position.x >= 0 && (int)position.x <= 9 && (int)position.y >= 0 && (int)position.y <= 9)
+        //    {
+
+        //    }
+        //}
+		return ((int)position.x >= 0 && (int) position.x <=9 && (int) position.y >= 0 && (int) position.y <= 9);
 	}
 
 	// Check if position is already occupied by another shape
@@ -156,7 +158,7 @@ public class Block : MonoBehaviour
 		downButton = GameObject.FindGameObjectWithTag ("Down").GetComponent<Button>();
 		leftButton = GameObject.FindGameObjectWithTag ("Left").GetComponent<Button>();
 		rightButton = GameObject.FindGameObjectWithTag ("Right").GetComponent<Button>();
-*/
+        */
 		GameObject.Find ("Sound Manager").GetComponent<SoundManager> ().StartDropSound();
 		foreach (Transform childBlock in transform)
 		{
@@ -209,7 +211,8 @@ public class Block : MonoBehaviour
 			}*/
 		}
 		finished = true;
-	}
+        
+    }
 
 	// Invoked when collision happens
 	void OnCollisionStay2D(Collision2D collision)
@@ -248,6 +251,74 @@ public class Block : MonoBehaviour
 	void StoreBlock()
 	{
 		transform.position = FindObjectOfType<Holder>().transform.position;
-		finished = true;
 	}
+
+    bool GameOver()
+    {
+        if (Lose() == true)
+        {
+            Debug.Log("Game Over!");
+            return true;
+        }
+        return false;
+    }
+
+    bool Lose()
+    {
+        Block[] blocks = FindObjectsOfType<Block>();
+        List<Block> activeBlocks = new List<Block>();
+
+        foreach (Block block in blocks)
+        {
+            if (block.finished == false)
+            {
+                activeBlocks.Add(block);
+            }
+        }
+        Debug.Log(activeBlocks.Count);
+        if(activeBlocks.Count == 0)
+        {
+            return false;
+        }
+        foreach (Block block in activeBlocks)
+        {
+            if (CanMove(block) == true)
+            {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    bool CanMove(Block block)
+    {
+        // Check if block can be placed in grid
+        Block checkBlock = Instantiate(block);
+        checkBlock.gameObject.SetActive(false);
+        for (int i = 0; i < 10; i++)
+        {
+            for (int j = 0; j < 10; j++)
+            {
+                if (Grid.grid[i, j] == null)
+                {
+                    Vector2 vect = new Vector2(i, j);
+                    checkBlock.transform.position = vect;
+                    //foreach(Transform childBlock in checkBlock.transform)
+                    //{
+                    //    //if(childBlock.transform.position.x > 10 || chil)
+                    //}
+                    if (checkBlock.IsInGrid() == true)
+                    {
+                        Destroy(checkBlock.gameObject);
+                        return true;
+                    }
+                    //if(checkBlock.IsInGrid() == false)
+                    //{
+
+                    //}
+                }
+            }
+        }
+        return false;
+    }
 }

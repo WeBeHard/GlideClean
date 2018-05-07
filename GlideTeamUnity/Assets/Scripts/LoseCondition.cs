@@ -2,40 +2,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class LoseCondition : GridManager {
-	/*
-	public bool checkMoves(){
+public class LoseCondition : MonoBehaviour {
 
-		if (Holder.full) {
-
-			if (IsValidGridPosition (Holder.holder)) {
-
-
-				return true;
-
-
-			}
-		}
-
-		if (Block.isSet) {
-
-
-
-		}
-
-
-		return false;
-	}
-*/
-
-
-
-
-
-
-
-
-
+    List<Block> activeBlocks = new List<Block>();
 
 	// Use this for initialization
 	void Start () {
