@@ -105,7 +105,7 @@ public class OurPlayerStats : MonoBehaviour {
 		PlayerPrefs.SetInt ("CumulativeScore", 0);
 		PlayerPrefs.SetInt ("TotalGamesPlayed", 0);
 
-		PlayerPrefs.SetInt ("ClassicHiScore", 0);
+		PlayerPrefs.SetInt ("ClassicHighScore", 0);
 		PlayerPrefs.SetInt ("ClassicTotalScore", 0);
 		PlayerPrefs.SetInt ("ClassicAvgScore", 0);
 		PlayerPrefs.SetInt ("ClassicTotalGamesPlayed", 0);
