@@ -70,9 +70,6 @@
     <Reference Include="UnityEngine.Timeline">
       <HintPath>Library\UnityAssemblies\UnityEngine.Timeline.dll</HintPath>
     </Reference>
-    <Reference Include="UnityEngine.Analytics">
-      <HintPath>Library\UnityAssemblies\UnityEngine.Analytics.dll</HintPath>
-    </Reference>
     <Reference Include="UnityEngine.HoloLens">
       <HintPath>Library\UnityAssemblies\UnityEngine.HoloLens.dll</HintPath>
     </Reference>
@@ -94,13 +91,14 @@
     <Compile Include="Assets\Scripts\openMenu.cs" />
     <Compile Include="Assets\Scripts\Options.cs" />
     <Compile Include="Assets\Scripts\OurPlayerStats.cs" />
-    <Compile Include="Assets\Scripts\PowersModeSoundManager.cs" />
+    <Compile Include="Assets\Scripts\PlacedBlock.cs" />
     <Compile Include="Assets\Scripts\RoundVector.cs" />
     <Compile Include="Assets\Scripts\scoreManager.cs" />
     <Compile Include="Assets\Scripts\SoundManager.cs" />
     <Compile Include="Assets\Scripts\Spawner.cs" />
     <Compile Include="Assets\Scripts\SpriteController.cs" />
     <Compile Include="Assets\Scripts\TimeAttackSoundManager.cs" />
+    <Compile Include="Assets\Scripts\Timer.cs" />
     <Compile Include="Assets\Scripts\TitleScreen.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
