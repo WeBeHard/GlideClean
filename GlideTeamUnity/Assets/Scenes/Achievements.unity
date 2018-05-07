@@ -2912,7 +2912,7 @@ RectTransform:
   m_GameObject: {fileID: 1039208246}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.75, y: 0.75, z: 1}
+  m_LocalScale: {x: 0.5, y: 0.5, z: 1}
   m_Children:
   - {fileID: 1081496189}
   m_Father: {fileID: 1193198096}
@@ -2921,7 +2921,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 159.99997, y: -339.66653}
-  m_SizeDelta: {x: 62.4, y: 56.667}
+  m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!82 &1039208248
 AudioSource:
@@ -3062,7 +3062,7 @@ MonoBehaviour:
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
-          m_StringArgument: MainMenu
+          m_StringArgument: PlayerProfile
           m_BoolArgument: 0
         m_CallState: 2
     m_TypeName: UnityEngine.UI.Button+ButtonClickedEvent, UnityEngine.UI, Version=1.0.0.0,
@@ -4503,7 +4503,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5ed041dd0f3f6a8419284fc8de1fbca8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  fadeOutTexture: {fileID: 0}
+  fadeOutTexture: {fileID: 2800000, guid: 5c84c73cbf7174f43b2990edf51e0422, type: 3}
   fadeSpeed: 0.8
 --- !u!114 &1414402722
 MonoBehaviour:

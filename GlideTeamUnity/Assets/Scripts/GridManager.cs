@@ -68,8 +68,8 @@ public class GridManager : MonoBehaviour {
 			Debug.Log (fullRows.Count);
 			DeleteRow(fullRows[0]);
 			fullRows.Remove(fullRows[0]);
-			GameObject.Find ("Sound Manager").GetComponent<SoundManager> ().StartLineClearingSound(); //clear sound
-			//yield return new WaitForSeconds(GameObject.Find ("Sound Manager").GetComponent<SoundManager> ().soundSource.clip.length);
+			 //clear sound
+			//yield return new WaitForSeconds(GameObject.Find ("Sound Manager").GetComponent<SoundManager>().soundSource.clip.length);
         }
 
 		while (fullColumns.Count != 0)
@@ -77,7 +77,7 @@ public class GridManager : MonoBehaviour {
 				Debug.Log (fullColumns.Count);
 	            DeleteColumn(fullColumns[0]);
 			fullColumns.Remove (fullColumns [0]);
-			GameObject.Find ("Sound Manager").GetComponent<SoundManager> ().StartLineClearingSound(); //clear sound
+			 //clear sound
 			//yield return new WaitForSeconds(GameObject.Find ("Sound Manager").GetComponent<SoundManager> ().soundSource.clip.length);
         }
 

@@ -37,6 +37,7 @@ public class Block : GridManager
 		objectPosition.x = (int)(Mathf.Round(objectPosition.x));
 		objectPosition.y = (int)(Mathf.Round(objectPosition.y));
 		transform.position = objectPosition;
+
 	}
 
 	void OnMouseUp()
@@ -44,16 +45,16 @@ public class Block : GridManager
 		if (IsInGrid() && stored == false)
 		{
 			SetBlock();
-			finished = true;
 		}
 		else if(stored == true)
 		{
 			StoreBlock();
-			finished = true;
+			hideArrows ();
 		}
 		else
 		{
 			transform.position = originalPosition;
+			hideArrows ();
 			Debug.Log("returned");
 		}
 	}
@@ -94,117 +95,128 @@ public class Block : GridManager
 
 	// Try instantiating and destroying
 	public void moveBlockUp (Block b){
-		GameObject.Find ("Sound Manager").GetComponent<SoundManager> ().StartInteractionSound();
-		while (IsMoveValid (b.transform, 0, 1)) {
+		if (b.IsInGrid ()) {
+			GameObject.Find ("Sound Manager").GetComponent<SoundManager> ().StartInteractionSound();
+			while (IsMoveValid (b.transform, 0, 1)) {
+				foreach (Transform child in b.transform) {
+					Vector2 currentPos = RoundVector (child.position);
+					Grid.grid [(int)currentPos.x, (int)currentPos.y] = null;
+					Grid.grid [(int)currentPos.x, (int)currentPos.y + 1] = child;
+				}
+				Vector2 objectPosition = b.transform.position;
+				int blockMove = Mathf.RoundToInt (b.transform.position.y) + 1;
+				objectPosition.y = (int)(Mathf.Round (blockMove));
+				b.transform.position = objectPosition;
+				Vector2 newBlockPos = RoundVector (transform.position);
+				Grid.grid [(int)newBlockPos.x, (int)newBlockPos.y] = this.transform;
+
+			}
+			hideArrows ();
 			foreach (Transform child in b.transform) {
 				Vector2 currentPos = RoundVector (child.position);
-				Grid.grid[(int)currentPos.x, (int)currentPos.y] = null;
-				Grid.grid [(int)currentPos.x, (int)currentPos.y + 1] = child;
+				Grid.grid [(int)currentPos.x, (int)currentPos.y] = child;
+				Debug.Log ("Child at: " + (int)currentPos.x + "," + (int)currentPos.y);
+				child.gameObject.AddComponent<PlacedBlock> ();
+				child.gameObject.GetComponent<PlacedBlock> ().setX ((int)currentPos.x);
+				child.gameObject.GetComponent<PlacedBlock> ().setY ((int)currentPos.y);
 			}
-			Vector2 objectPosition = b.transform.position;
-			int blockMove = Mathf.RoundToInt(b.transform.position.y) + 1;
-			objectPosition.y = (int)(Mathf.Round(blockMove));
-			b.transform.position = objectPosition;
-			Vector2 newBlockPos = RoundVector(transform.position);
-			Grid.grid [(int)newBlockPos.x, (int)newBlockPos.y] = this.transform;
-
+			finished = true;
+			Destroy (this.GetComponent<Block> ());
+			ClearCheck (b.transform);
 		}
-		hideArrows ();
-		foreach (Transform child in b.transform) {
-			Vector2 currentPos = RoundVector (child.position);
-			Grid.grid [(int)currentPos.x, (int)currentPos.y] = child;
-			Debug.Log ("Child at: " + (int)currentPos.x + "," + (int)currentPos.y);
-			child.gameObject.AddComponent<PlacedBlock>();
-			child.gameObject.GetComponent<PlacedBlock>().setX((int)currentPos.x);
-			child.gameObject.GetComponent<PlacedBlock>().setY((int)currentPos.y);
-		}
-		Destroy (this.GetComponent<Block> ());
-		ClearCheck (b.transform);
 	}
 		
 	public void moveBlockDown (Block b){
-		GameObject.Find ("Sound Manager").GetComponent<SoundManager> ().StartInteractionSound();
-		while (IsMoveValid (b.transform, 0, -1)) {
+		if (b.IsInGrid ()) {
+			GameObject.Find ("Sound Manager").GetComponent<SoundManager> ().StartInteractionSound();
+			while (IsMoveValid (b.transform, 0, -1)) {
+				foreach (Transform child in b.transform) {
+					Vector2 currentPos = RoundVector (child.position);
+					Grid.grid [(int)currentPos.x, (int)currentPos.y] = null;
+					Grid.grid [(int)currentPos.x, (int)currentPos.y - 1] = child;
+				}
+				Vector2 objectPosition = b.transform.position;
+				int blockMove = Mathf.RoundToInt (b.transform.position.y) - 1;
+				objectPosition.y = (int)(Mathf.Round (blockMove));
+				b.transform.position = objectPosition;
+				Vector2 newBlockPos = RoundVector (transform.position);
+				Grid.grid [(int)newBlockPos.x, (int)newBlockPos.y] = this.transform;
+			}
+			hideArrows ();
+			Debug.Log ("Child count" + b.transform.childCount);
 			foreach (Transform child in b.transform) {
 				Vector2 currentPos = RoundVector (child.position);
-				Grid.grid[(int)currentPos.x, (int)currentPos.y] = null;
-				Grid.grid [(int)currentPos.x, (int)currentPos.y - 1] = child;
+				Grid.grid [(int)currentPos.x, (int)currentPos.y] = child;
+				Debug.Log ("Child at: " + (int)currentPos.x + "," + (int)currentPos.y);
+				child.gameObject.AddComponent<PlacedBlock> ();
+				child.gameObject.GetComponent<PlacedBlock> ().setX ((int)currentPos.x);
+				child.gameObject.GetComponent<PlacedBlock> ().setY ((int)currentPos.y);	
 			}
-			Vector2 objectPosition = b.transform.position;
-			int blockMove = Mathf.RoundToInt(b.transform.position.y) - 1;
-			objectPosition.y = (int)(Mathf.Round(blockMove));
-			b.transform.position = objectPosition;
-			Vector2 newBlockPos = RoundVector(transform.position);
-			Grid.grid [(int)newBlockPos.x, (int)newBlockPos.y] = this.transform;
+			finished = true;
+			Destroy (this.GetComponent<Block> ());
+			ClearCheck (b.transform);
 		}
-		hideArrows ();
-		Debug.Log ("Child count" + b.transform.childCount);
-		foreach (Transform child in b.transform) {
-			Vector2 currentPos = RoundVector (child.position);
-			Grid.grid [(int)currentPos.x, (int)currentPos.y] = child;
-			Debug.Log ("Child at: " + (int)currentPos.x + "," + (int)currentPos.y);
-			child.gameObject.AddComponent<PlacedBlock>();
-			child.gameObject.GetComponent<PlacedBlock>().setX((int)currentPos.x);
-			child.gameObject.GetComponent<PlacedBlock>().setY((int)currentPos.y);	
-		}
-		Destroy (this.GetComponent<Block> ());
-		ClearCheck (b.transform);
 	}
 
 	public void moveBlockLeft (Block b){
-		GameObject.Find ("Sound Manager").GetComponent<SoundManager> ().StartInteractionSound();
-		while (IsMoveValid (b.transform, -1, 0)) {
+		if (b.IsInGrid ()) {
+			GameObject.Find ("Sound Manager").GetComponent<SoundManager> ().StartInteractionSound();
+			while (IsMoveValid (b.transform, -1, 0)) {
+				foreach (Transform child in b.transform) {
+					Vector2 currentPos = RoundVector (child.position);
+					Grid.grid [(int)currentPos.x, (int)currentPos.y] = null;
+					Grid.grid [(int)currentPos.x - 1, (int)currentPos.y] = child;
+				}
+				Vector2 objectPosition = b.transform.position;
+				int blockMove = Mathf.RoundToInt (b.transform.position.x) - 1;
+				objectPosition.x = (int)(Mathf.Round (blockMove));
+				b.transform.position = objectPosition;
+				Vector2 newBlockPos = RoundVector (transform.position);
+				Grid.grid [(int)newBlockPos.x, (int)newBlockPos.y] = this.transform;
+			}
 			foreach (Transform child in b.transform) {
 				Vector2 currentPos = RoundVector (child.position);
-				Grid.grid[(int)currentPos.x, (int)currentPos.y] = null;
-				Grid.grid [(int)currentPos.x - 1, (int)currentPos.y] = child;
+				Grid.grid [(int)currentPos.x, (int)currentPos.y] = child;
+				child.gameObject.AddComponent<PlacedBlock> ();
+				child.gameObject.GetComponent<PlacedBlock> ().setX ((int)currentPos.x);
+				child.gameObject.GetComponent<PlacedBlock> ().setY ((int)currentPos.y);
 			}
-			Vector2 objectPosition = b.transform.position;
-			int blockMove = Mathf.RoundToInt(b.transform.position.x) - 1;
-			objectPosition.x = (int)(Mathf.Round(blockMove));
-			b.transform.position = objectPosition;
-			Vector2 newBlockPos = RoundVector(transform.position);
-			Grid.grid [(int)newBlockPos.x, (int)newBlockPos.y] = this.transform;
+			hideArrows ();
+			finished = true;
+			Destroy (this.GetComponent<Block> ());
+			ClearCheck (b.transform);
 		}
-		foreach (Transform child in b.transform) {
-			Vector2 currentPos = RoundVector (child.position);
-			Grid.grid [(int)currentPos.x, (int)currentPos.y] = child;
-			child.gameObject.AddComponent<PlacedBlock>();
-			child.gameObject.GetComponent<PlacedBlock>().setX((int)currentPos.x);
-			child.gameObject.GetComponent<PlacedBlock>().setY((int)currentPos.y);
-		}
-		hideArrows ();
-		Destroy (this.GetComponent<Block> ());
-		ClearCheck (b.transform);
-			
 	}
 		
 	public void moveBlockRight (Block b){
-		GameObject.Find ("Sound Manager").GetComponent<SoundManager> ().StartInteractionSound();
-		while (IsMoveValid (b.transform, 1, 0)) {
+		if (b.IsInGrid ()) {
+			GameObject.Find ("Sound Manager").GetComponent<SoundManager> ().StartInteractionSound();
+			while (IsMoveValid (b.transform, 1, 0)) {
+				foreach (Transform child in b.transform) {
+					Vector2 currentPos = RoundVector (child.position);
+					Grid.grid [(int)currentPos.x, (int)currentPos.y] = null;
+					Grid.grid [(int)currentPos.x + 1, (int)currentPos.y] = child;
+				}
+				Vector2 objectPosition = b.transform.position;
+				int blockMove = Mathf.RoundToInt (b.transform.position.x) + 1;
+				objectPosition.x = (int)(Mathf.Round (blockMove));
+				b.transform.position = objectPosition;
+				Vector2 newBlockPos = RoundVector (transform.position);
+				Grid.grid [(int)newBlockPos.x, (int)newBlockPos.y] = this.transform;
+			}
 			foreach (Transform child in b.transform) {
 				Vector2 currentPos = RoundVector (child.position);
-				Grid.grid[(int)currentPos.x, (int)currentPos.y] = null;
-				Grid.grid [(int)currentPos.x + 1, (int)currentPos.y] = child;
+				Grid.grid [(int)currentPos.x, (int)currentPos.y] = child;
+				Debug.Log ("Sprite at " + (int)currentPos.x + "," + (int)currentPos.y + "became PlacedBlock.");
+				child.gameObject.AddComponent<PlacedBlock> ();
+				child.gameObject.GetComponent<PlacedBlock> ().setX ((int)currentPos.x);
+				child.gameObject.GetComponent<PlacedBlock> ().setY ((int)currentPos.y);
 			}
-			Vector2 objectPosition = b.transform.position;
-			int blockMove = Mathf.RoundToInt(b.transform.position.x) + 1;
-			objectPosition.x = (int)(Mathf.Round(blockMove));
-			b.transform.position = objectPosition;
-			Vector2 newBlockPos = RoundVector(transform.position);
-			Grid.grid [(int)newBlockPos.x, (int)newBlockPos.y] = this.transform;
+			hideArrows ();
+			finished = true;
+			Destroy (this.GetComponent<Block> ());
+			ClearCheck (b.transform);
 		}
-		foreach (Transform child in b.transform) {
-			Vector2 currentPos = RoundVector (child.position);
-			Grid.grid [(int)currentPos.x, (int)currentPos.y] = child;
-			Debug.Log ("Sprite at " + (int)currentPos.x + "," + (int)currentPos.y + "became PlacedBlock.");
-			child.gameObject.AddComponent<PlacedBlock>();
-			child.gameObject.GetComponent<PlacedBlock>().setX((int)currentPos.x);
-			child.gameObject.GetComponent<PlacedBlock>().setY((int)currentPos.y);
-		}
-		hideArrows ();
-		Destroy (this.GetComponent<Block> ());
-		ClearCheck (b.transform);
 	}
 
 	void ClearCheck(Transform b){
@@ -264,19 +276,19 @@ public class Block : GridManager
 
 			if ((int)position.x == 0 && (int)position.y == 0) {
 
-				showArrows("Up", "Right");
+				showArrows("Up", "Right");/*
 				Vector2 upButtonPos = position;
 				upButtonPos.y += 3;
 				upButton.transform.position = upButtonPos;
 
 				Vector2 rightButtonPos = position;
 				rightButtonPos.x += 3;
-				rightButton.transform.position = rightButtonPos;
+				rightButton.transform.position = rightButtonPos;*/
 
 
 			} else if ((int)position.x == 0 && (int)position.y == 9) {
 
-				showArrows("Down", "Right");
+				showArrows("Down", "Right");/*
 				Vector2 downButtonPos = position;
 				downButtonPos.y -= 2;
 				downButtonPos.x += 1;
@@ -284,12 +296,12 @@ public class Block : GridManager
 
 				Vector2 rightButtonPos = position;
 				rightButtonPos.x += 3;
-				rightButton.transform.position = rightButtonPos;
+				rightButton.transform.position = rightButtonPos;*/
 
 
 			} else if ((int)position.x == 9 && (int)position.y == 0) {
 
-				showArrows("Up", "Left");
+				showArrows("Up", "Left");/*
 				Vector2 leftButtonPos = position;
 				leftButtonPos.x -= 3;
 				leftButton.transform.position = leftButtonPos;
@@ -298,11 +310,11 @@ public class Block : GridManager
 				upButtonPos.y += 3;
 				upButtonPos.x -= 1;
 				upButton.transform.position = upButtonPos;
-
+*/
 
 			} else if ((int)position.x == 9 && (int)position.y == 9) {
 
-				showArrows("Down", "Left");
+				showArrows("Down", "Left");/*
 				Vector2 downButtonPos = position;
 				downButtonPos.y -= 3;
 				downButtonPos.x -= 1;
@@ -311,48 +323,47 @@ public class Block : GridManager
 				Vector2 leftButtonPos = position;
 				leftButtonPos.x -= 3;
 				leftButton.transform.position = leftButtonPos;
-
+*/
 			}
 			else if ((int)position.x == 0) {
-
-				showArrows("Right");
+			
+				showArrows("Right");/*
 				Vector2 rightButtonPos = position;
 				rightButtonPos.x += 3;
-				rightButton.transform.position = rightButtonPos;
+				rightButton.transform.position = rightButtonPos;*/
 
 
 			}
 			else if ((int)position.x == 9) {
 
-				showArrows("Left");
+				showArrows("Left");/*
 				Vector2 leftButtonPos = position;
 				leftButtonPos.x -= 3;
-				leftButton.transform.position = leftButtonPos;
+				leftButton.transform.position = leftButtonPos;*/
 
 
 			}
 			else if ((int)position.y == 0) {
 
-				showArrows("Up");
+				showArrows("Up");/*
 				Vector2 upButtonPos = position;
 				upButtonPos.y += 3;
 				upButtonPos.x -= 1;
-				upButton.transform.position = upButtonPos;
+				upButton.transform.position = upButtonPos;*/
 
 
 			}
 			else if ((int)position.y == 9) {
 
-				showArrows("Down");
+				showArrows("Down");/*
 				Vector2 downButtonPos = position;
 				downButtonPos.y -= 3;
 				downButtonPos.x -= 1;
-				downButton.transform.position = downButtonPos;
+				downButton.transform.position = downButtonPos;*/
 
 
 			}
 		}
-		finished = true;
 	}
 
 	// Invoked when collision happens

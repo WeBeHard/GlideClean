@@ -46,7 +46,8 @@ public class scoreManager : MonoBehaviour
         }
 
         public void UpdateScore(int UpdateValue)
-        {
+		{
+		GameObject.Find ("Sound Manager").GetComponent<SoundManager> ().StartLineClearingSound();
             currentScore += UpdateValue;
 		InGameScore.text = currentScore.ToString();
             CheckgameModeHiScore();
