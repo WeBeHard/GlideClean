@@ -38,15 +38,15 @@ public class OurPlayerStats : MonoBehaviour {
 	public Text powersTotalScoreText;
 	public Text powersTotalGamesPlayedText;*/
 
-	public Text cumulativeScore;
-	public Text totalGamesPlayed;
+	public Text cumulativeScoreText;
+	public Text totalGamesPlayedText;
 
 	public int getCumulativeScore (){
 		return CumulativeScore;
 	}
 
 	void Start (){
-		CumulativeScore = PlayerPrefs.GetInt ("CumulativeHighScore", 0);
+		CumulativeScore = PlayerPrefs.GetInt ("CumulativeScore", 0);
 		TotalGamesPlayed = PlayerPrefs.GetInt("TotalGamesPlayed", 0);
 
 		ClassicHiScore = PlayerPrefs.GetInt ("ClassicHighScore", 0);
@@ -59,6 +59,9 @@ public class OurPlayerStats : MonoBehaviour {
 		TimeAttackAvgScore = PlayerPrefs.GetInt ("TimeAttackAvgScore", 0);
 		TimeAttackTotalGamesPlayed = PlayerPrefs.GetInt ("TimeAttackTotalGamesPlayed", 0);
 
+		CumulativeScore = PlayerPrefs.GetInt("CumulativeScore", 0);
+		TotalGamesPlayed = PlayerPrefs.GetInt("TotalGamesPlayed", 0);
+
 
 		classicHighScoreText.text = ClassicHiScore.ToString ();
 		classicAvgScoreText.text = ClassicAvgScore.ToString ();
@@ -69,6 +72,9 @@ public class OurPlayerStats : MonoBehaviour {
 		timeAttackAvgScoreText.text = TimeAttackTotalScore.ToString ();
 		timeAttackTotalScoreText.text = TimeAttackTotalScore.ToString ();
 		timeAttackTotalGamesPlayedText.text = TimeAttackTotalGamesPlayed.ToString ();
+
+		cumulativeScoreText.text = CumulativeScore.ToString ();
+		totalGamesPlayedText.text = TotalGamesPlayed.ToString ();
 		/*
 		powersHighScoreText.text = PlayerPrefs.GetInt ("PowersHighScore", 0).ToString ();
 		powersAvgScoreText.text = PlayerPrefs.GetInt ("PowersAvgScore", 0).ToString ();
@@ -96,6 +102,19 @@ public class OurPlayerStats : MonoBehaviour {
 		PowersAvgScore = 0;
 		PowersTotalGamesPlayed = 0;
 */
+		PlayerPrefs.SetInt ("CumulativeScore", 0);
+		PlayerPrefs.SetInt ("TotalGamesPlayed", 0);
+
+		PlayerPrefs.SetInt ("ClassicHiScore", 0);
+		PlayerPrefs.SetInt ("ClassicTotalScore", 0);
+		PlayerPrefs.SetInt ("ClassicAvgScore", 0);
+		PlayerPrefs.SetInt ("ClassicTotalGamesPlayed", 0);
+
+		PlayerPrefs.SetInt ("TimeAttackHiScore", 0);
+		PlayerPrefs.SetInt ("TimeAttackTotalScore", 0);
+		PlayerPrefs.SetInt ("TimeAttackAvgScore", 0);
+		PlayerPrefs.SetInt ("TimeAttackTotalGamesPlayed", 0);
+
 		CumulativeScore = PlayerPrefs.GetInt ("CumulativeHighScore", 0);
 		TotalGamesPlayed = PlayerPrefs.GetInt("TotalGamesPlayed", 0);
 
@@ -109,6 +128,8 @@ public class OurPlayerStats : MonoBehaviour {
 		TimeAttackAvgScore = PlayerPrefs.GetInt ("TimeAttackAvgScore", 0);
 		TimeAttackTotalGamesPlayed = PlayerPrefs.GetInt ("TimeAttackTotalGamesPlayed", 0);
 
+		CumulativeScore = PlayerPrefs.GetInt("CumulativeScore", 0);
+		TotalGamesPlayed = PlayerPrefs.GetInt("TotalGamesPlayed", 0);
 
 		classicHighScoreText.text = ClassicHiScore.ToString ();
 		classicAvgScoreText.text = ClassicAvgScore.ToString ();
@@ -119,6 +140,9 @@ public class OurPlayerStats : MonoBehaviour {
 		timeAttackAvgScoreText.text = TimeAttackTotalScore.ToString ();
 		timeAttackTotalScoreText.text = TimeAttackTotalScore.ToString ();
 		timeAttackTotalGamesPlayedText.text = TimeAttackTotalGamesPlayed.ToString ();
+
+		cumulativeScoreText.text = CumulativeScore.ToString ();
+		totalGamesPlayedText.text = TotalGamesPlayed.ToString ();
 		/*
 		PlayerPrefs.SetInt ("PowersHighScore", Powers);
 		powersHighScoreText.text = PlayerPrefs.GetInt ("PowersHighScore", 0).ToString ();
