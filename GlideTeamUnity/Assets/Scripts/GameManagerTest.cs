@@ -13,7 +13,7 @@ public class GameManagerTest : MonoBehaviour {
 	Spawner rightSpawner;
 
 	// holder
-	Holder holder;
+	//Holder holder;
 
 	//// game over
 	//bool gameOver = false;
@@ -41,25 +41,17 @@ public class GameManagerTest : MonoBehaviour {
 		leftSpawner = GameObject.Find("LeftSpawner").GetComponent<Spawner>();
 		middleSpawner = GameObject.Find("MiddleSpawner").GetComponent<Spawner>();
 		rightSpawner = GameObject.Find("RightSpawner").GetComponent<Spawner>();
-
-        holder = GameObject.Find("Holder").GetComponent<Holder>();
-
-        //for(int i = 0; i < 4; i++)
-        //{
-        //    leftSpawner.CanMove(leftSpawner.activeBlock);
-        //    middleSpawner.CanMove(middleSpawner.activeBlock);
-        //    rightSpawner.CanMove(rightSpawner.activeBlock);
-
-        //    holder.CanMove(Holder.holdBlock);
-        //}
-
-        if (leftSpawner.IsEmpty() == true && middleSpawner.IsEmpty() == true && rightSpawner.IsEmpty() == true)
+		if (leftSpawner.IsEmpty() == true && middleSpawner.IsEmpty() == true && rightSpawner.IsEmpty() == true)
 		{
 			leftSpawner.SpawnBlock();
 			middleSpawner.SpawnBlock();
 			rightSpawner.SpawnBlock();
 		}
-
-        //GameOver();
+		//if (gameOver)
+		//{
+		//    return;
+		//}
 	}
+
+
 }

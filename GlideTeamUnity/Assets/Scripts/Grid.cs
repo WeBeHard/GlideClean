@@ -10,6 +10,7 @@ public class Grid : MonoBehaviour {
     // Use this for initialization
     void Start () {
         DrawGrid();
+
 	}
 	
 	// Update is called once per frame

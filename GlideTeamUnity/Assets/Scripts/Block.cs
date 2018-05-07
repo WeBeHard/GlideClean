@@ -2,6 +2,7 @@
  * Detect if object was clicked
  * Match object transform to mouse transform
  */
+
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -11,7 +12,6 @@ public class Block : GridManager
 	Transform objectPosition;
 	Vector2 originalPosition;
 	Vector2 tempPosition;
-
 	public bool stored;
 	public bool finished;
 
@@ -27,7 +27,7 @@ public class Block : GridManager
 		originalPosition = transform.position;
 		stored = false;
 		finished = false;
-		hideArrows();
+		hideArrows ();
 	}
 
 	void OnMouseDrag()
@@ -46,8 +46,7 @@ public class Block : GridManager
 		if (IsInGrid() && stored == false)
 		{
 			SetBlock();
-            GameOver();
-        }
+		}
 		else if(stored == true)
 		{
 			StoreBlock();
@@ -71,7 +70,7 @@ public class Block : GridManager
 		return new Vector2(Mathf.Round(vector2d.x), Mathf.Round(vector2d.y));
 	}
 
-	public bool IsInGrid()
+	bool IsInGrid()
 	{
 		// Go through each child block to see if it is in grid and not taking up current space
 		foreach(Transform childBlock in transform)
@@ -125,6 +124,8 @@ public class Block : GridManager
 			finished = true;
 			Destroy (this.GetComponent<Block> ());
 			ClearCheck (b.transform);
+			GameOver();
+
 		}
 	}
 		
@@ -157,6 +158,7 @@ public class Block : GridManager
 			finished = true;
 			Destroy (this.GetComponent<Block> ());
 			ClearCheck (b.transform);
+			GameOver();
 		}
 	}
 
@@ -187,6 +189,7 @@ public class Block : GridManager
 			finished = true;
 			Destroy (this.GetComponent<Block> ());
 			ClearCheck (b.transform);
+			GameOver();
 		}
 	}
 		
@@ -214,11 +217,12 @@ public class Block : GridManager
 				child.gameObject.GetComponent<PlacedBlock> ().setX ((int)currentPos.x);
 				child.gameObject.GetComponent<PlacedBlock> ().setY ((int)currentPos.y);
 			}
-            hideArrows();
-            finished = true;
-            Destroy(this.GetComponent<Block>());
-            ClearCheck(b.transform);
-        }
+			hideArrows ();
+			finished = true;
+			Destroy (this.GetComponent<Block> ());
+			ClearCheck (b.transform);
+			GameOver();
+		}
 	}
 
 	void ClearCheck(Transform b){
@@ -241,7 +245,7 @@ public class Block : GridManager
 	// Check if position is within border
 	bool IsInBorder(Vector2 position)
 	{
-		return ((int)position.x >= 0 && (int) position.x <=9 && (int) position.y >= 0 && (int) position.y <= 9);
+		return ((int)position.x >= 0 && (int) position.x <=10 && (int) position.y >= 0 && (int) position.y <= 10);
 	}
 	/*
 	bool IsOnBorder(Vector2 position)
@@ -256,7 +260,8 @@ public class Block : GridManager
 	}
 
 	public void SetBlock()
-	{	
+	{
+		
 		upButton = GameObject.Find ("Up").GetComponent<Button>();
 		downButton = GameObject.Find ("Down").GetComponent<Button>();
 		leftButton = GameObject.Find ("Left").GetComponent<Button>();
@@ -266,7 +271,6 @@ public class Block : GridManager
 		downButton.onClick.AddListener(() => moveBlockDown(this));
 		rightButton.onClick.AddListener(() => moveBlockRight(this));
 		leftButton.onClick.AddListener(() => moveBlockLeft(this));
-
 		GameObject.Find ("Sound Manager").GetComponent<SoundManager> ().StartDropSound();
 		/*Vector2 newPos = transform.position;
 		newPos = roundPosition (newPos.x, newPos.y);
@@ -366,9 +370,7 @@ public class Block : GridManager
 
 			}
 		}
-		finished = true;
-        
-    }
+	}
 
 	// Invoked when collision happens
 	void OnCollisionStay2D(Collision2D collision)
@@ -406,76 +408,8 @@ public class Block : GridManager
 	void StoreBlock()
 	{
 		transform.position = FindObjectOfType<Holder>().transform.position;
+		finished = true;
 	}
-
-    bool GameOver()
-    {
-        if (Lose() == true)
-        {
-            Debug.Log("Game Over!");
-            return true;
-        }
-        return false;
-    }
-
-    bool Lose()
-    {
-        Block[] blocks = FindObjectsOfType<Block>();
-        List<Block> activeBlocks = new List<Block>();
-
-        foreach (Block block in blocks)
-        {
-            if (block.finished == false)
-            {
-                activeBlocks.Add(block);
-            }
-        }
-        Debug.Log(activeBlocks.Count);
-        if(activeBlocks.Count == 0)
-        {
-            return false;
-        }
-        foreach (Block block in activeBlocks)
-        {
-            if (CanMove(block) == true)
-            {
-                return false;
-            }
-        }
-        return true;
-    }
-
-    bool CanMove(Block block)
-    {
-        // Check if block can be placed in grid
-        Block checkBlock = Instantiate(block);
-        checkBlock.gameObject.SetActive(false);
-        for (int i = 0; i < 10; i++)
-        {
-            for (int j = 0; j < 10; j++)
-            {
-                if (Grid.grid[i, j] == null)
-                {
-                    Vector2 vect = new Vector2(i, j);
-                    checkBlock.transform.position = vect;
-                    //foreach(Transform childBlock in checkBlock.transform)
-                    //{
-                    //    //if(childBlock.transform.position.x > 10 || chil)
-                    //}
-                    if (checkBlock.IsInGrid() == true)
-                    {
-                        Destroy(checkBlock.gameObject);
-                        return true;
-                    }
-                    //if(checkBlock.IsInGrid() == false)
-                    //{
-
-                    //}
-                }
-            }
-        }
-        return false;
-    }
 
 	void hideArrows(){
 		upButton = GameObject.Find ("Up").GetComponent<Button> ();
@@ -532,5 +466,75 @@ public class Block : GridManager
 		newPos.x = finalX;
 		newPos.y = finalY;
 		return newPos;
+	}	
+
+bool GameOver()
+{
+	if (Lose() == true)
+	{
+		Debug.Log("Game Over!");
+		return true;
 	}
+	return false;
+}
+
+bool Lose()
+{
+	Block[] blocks = FindObjectsOfType<Block>();
+	List<Block> activeBlocks = new List<Block>();
+
+	foreach (Block block in blocks)
+	{
+		if (block.finished == false)
+		{
+			activeBlocks.Add(block);
+		}
+	}
+	Debug.Log(activeBlocks.Count);
+	if(activeBlocks.Count == 0)
+	{
+		return false;
+	}
+	foreach (Block block in activeBlocks)
+	{
+		if (CanMove(block) == true)
+		{
+			return false;
+		}
+	}
+	return true;
+}
+
+bool CanMove(Block block)
+{
+	// Check if block can be placed in grid
+	Block checkBlock = Instantiate(block);
+	checkBlock.gameObject.SetActive(false);
+	for (int i = 0; i < 10; i++)
+	{
+		for (int j = 0; j < 10; j++)
+		{
+			if (Grid.grid[i, j] == null)
+			{
+				Vector2 vect = new Vector2(i, j);
+				checkBlock.transform.position = vect;
+				//foreach(Transform childBlock in checkBlock.transform)
+				//{
+				//    //if(childBlock.transform.position.x > 10 || chil)
+				//}
+				if (checkBlock.IsInGrid() == true)
+				{
+					Destroy(checkBlock.gameObject);
+					return true;
+				}
+				//if(checkBlock.IsInGrid() == false)
+				//{
+
+				//}
+			}
+		}
+	}
+	return false;
+}
+
 }
