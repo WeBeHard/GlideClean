@@ -14,6 +14,9 @@ public class Block : GridManager
 	Vector2 tempPosition;
 	public bool stored;
 	public bool finished;
+	public int maxY;
+	public int maxX;
+
 
 	public Button upButton;
 	public Button downButton;
@@ -28,6 +31,9 @@ public class Block : GridManager
 		stored = false;
 		finished = false;
 		hideArrows ();
+		maxX = (int)GetComponent<Collider2D> ().bounds.size.x - 1;
+		maxY = (int)GetComponent<Collider2D> ().bounds.size.y - 1;
+		
 	}
 
 	void OnMouseDrag()
@@ -517,11 +523,7 @@ bool CanMove(Block block)
 	{
 		for (int j = 0; j < 10; j++)
 		{
-				int minX = 0;
-				int maxX = 9;
-				int minY = 0;
-				int maxY = 9;
-			if (Grid.grid[i, j] == null && (i == minX || i == maxX || j == minY || j == maxY))
+			if (Grid.grid[i, j] == null && (i == 0 || i == 9 - maxX || j == 0 || j == 9 - maxY))
 			{
 				Vector2 vect = new Vector2(i, j);
 				checkBlock.transform.position = vect;
