@@ -27,6 +27,7 @@ public class Block : GridManager
 		originalPosition = transform.position;
 		stored = false;
 		finished = false;
+		hideArrows();
 	}
 
 	void OnMouseDrag()
