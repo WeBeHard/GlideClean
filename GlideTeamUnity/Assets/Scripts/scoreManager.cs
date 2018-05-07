@@ -54,6 +54,11 @@ public class scoreManager : MonoBehaviour
             //Managers.UI.inGameUI.UpdateScoreUI(); // Dipslay score on UI if used
             int newCumulativeScore = (PlayerPrefs.GetInt("CumulativeScore")) + UpdateValue;
             PlayerPrefs.SetInt("CumulativeScore", newCumulativeScore);
+
+			if (currentGameMode == 2)
+			{
+				GameObject.Find ("Timer").GetComponent<Timer> ().Addtime();
+			}
         }
 
         public void CheckgameModeHiScore()
