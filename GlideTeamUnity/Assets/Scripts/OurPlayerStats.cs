@@ -110,7 +110,7 @@ public class OurPlayerStats : MonoBehaviour {
 		PlayerPrefs.SetInt ("ClassicAvgScore", 0);
 		PlayerPrefs.SetInt ("ClassicTotalGamesPlayed", 0);
 
-		PlayerPrefs.SetInt ("TimeAttackHiScore", 0);
+		PlayerPrefs.SetInt ("TimeAttackHighScore", 0);
 		PlayerPrefs.SetInt ("TimeAttackTotalScore", 0);
 		PlayerPrefs.SetInt ("TimeAttackAvgScore", 0);
 		PlayerPrefs.SetInt ("TimeAttackTotalGamesPlayed", 0);

@@ -506,7 +506,7 @@ void GameOver()
         }
     }
 
-void GameOver(bool timer)
+public void GameOver(bool timer)
 {
 	if (timer)
 	{

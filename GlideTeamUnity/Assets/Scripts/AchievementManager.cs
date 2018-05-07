@@ -241,8 +241,9 @@ public class AchievementManager : MonoBehaviour
         PlayerPrefs.GetInt("AchievementUNYIELDING") == 1 &&
         PlayerPrefs.GetInt("AchievementSTILLHERE") == 1 &&
         PlayerPrefs.GetInt("AchievementTHECLASSICS") == 1 &&
-        PlayerPrefs.GetInt("AchievementSPEEDDEMON") == 1 &&
-        PlayerPrefs.GetInt("AchievementNORULES") == 1)
+        PlayerPrefs.GetInt("AchievementSPEEDDEMON") == 1
+        // && PlayerPrefs.GetInt("AchievementNORULES") == 1
+		)
         {
 			PlayerPrefs.SetInt("AchievementACHIEVEMENTHUNTER", 1);
         }

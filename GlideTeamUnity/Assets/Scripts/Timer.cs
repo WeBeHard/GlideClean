@@ -8,15 +8,13 @@ public class Timer : GridManager {
 	public Text timeText;
 	public float timeStamp;
 	public bool usingTimer;
-	float timeLeft = 100.0f;
+	float timeLeft = 20.0f;
 
 	public float seconds, minutes;
 
 	// Use this for initialization
 	void Start () {
 		//setTimer (30);
-
-		timeText = GetComponent<Text>() as Text;	
 	}
 
 	public void Addtime()
@@ -29,10 +27,11 @@ public class Timer : GridManager {
 		
 		timeLeft -= Time.deltaTime;
 		string timer = ((int)timeLeft).ToString ("00");
-		this.timeText.text = timer;
+		timeText.text = timer;
 		if(timeLeft <= 0)
 		{
-			
+			GameObject.Find ("LoseBlock").GetComponent<Block> ().GameOver(true);
+			Destroy (this);
 		}
 		/*
 		if (fullRows.Count != 0 || fullColumns.Count != 0) {
