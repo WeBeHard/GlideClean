@@ -245,7 +245,7 @@ public class Block : GridManager
 	// Check if position is within border
 	bool IsInBorder(Vector2 position)
 	{
-		return ((int)position.x >= 0 && (int) position.x <=10 && (int) position.y >= 0 && (int) position.y <= 10);
+		return ((int)position.x >= 0 && (int) position.x <=9 && (int) position.y >= 0 && (int) position.y <= 9);
 	}
 	/*
 	bool IsOnBorder(Vector2 position)
@@ -505,36 +505,71 @@ bool Lose()
 	return true;
 }
 
-bool CanMove(Block block)
-{
-	// Check if block can be placed in grid
-	Block checkBlock = Instantiate(block);
-	checkBlock.gameObject.SetActive(false);
-	for (int i = 0; i < 10; i++)
-	{
-		for (int j = 0; j < 10; j++)
-		{
-			if (Grid.grid[i, j] == null)
-			{
-				Vector2 vect = new Vector2(i, j);
-				checkBlock.transform.position = vect;
-				//foreach(Transform childBlock in checkBlock.transform)
-				//{
-				//    //if(childBlock.transform.position.x > 10 || chil)
-				//}
-				if (checkBlock.IsInGrid() == true)
-				{
-					Destroy(checkBlock.gameObject);
-					return true;
-				}
-				//if(checkBlock.IsInGrid() == false)
-				//{
+//bool CanMove(Block block)
+//{
+//	// Check if block can be placed in grid
+//	Block checkBlock = Instantiate(block);
+//	checkBlock.gameObject.SetActive(false);
+//	for (int i = 0; i < 10; i++)
+//	{
+//		for (int j = 0; j < 10; j++)
+//		{
+//			if (Grid.grid[i, j] == null)
+//			{
+//				Vector2 vect = new Vector2(i, j);
+//				checkBlock.transform.position = vect;
+//				//foreach(Transform childBlock in checkBlock.transform)
+//				//{
+//				//    //if(childBlock.transform.position.x > 10 || chil)
+//				//}
+//				if (checkBlock.IsInGrid() == true)
+//				{
+//					Destroy(checkBlock.gameObject);
+//					return true;
+//				}
+//				//if(checkBlock.IsInGrid() == false)
+//				//{
 
-				//}
-			}
-		}
-	}
-	return false;
-}
+//				//}
+//			}
+//		}
+//	}
+//	return false;
+//}
+
+    bool CanMove(Block block)
+    {
+        // Check if block can be placed in grid
+        Block checkBlock = Instantiate(block);
+        checkBlock.gameObject.SetActive(false);
+        for (int i = 0; i < 10; i++)
+        {
+            for (int j = 0; j < 10; j++)
+            {
+                Vector2 blockPosition = new Vector2(i, j);
+                //foreach(Transform childBlock in checkBlock.transform)
+                //{
+                //    if(IsInBorder(new Vector2(childBlock.position.x, childBlock.position.y)) == false)
+                //    {
+                //        // Create new position
+                //        Debug.Log("OUT OF BOUNDS: ");
+                //        blockPosition.y = checkBlock.transform.position.y - 1;
+                //    }
+                //}
+                if(Grid.grid[i, j] == null && (i == 0 || i == 9 || j == 0 || j == 9))
+                {
+                    //Vector2 vect = new Vector2(i, j);
+                    checkBlock.transform.position = blockPosition;
+
+                    if (checkBlock.IsInGrid() == true)
+                    {
+                        Destroy(checkBlock.gameObject);
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
+    }
 
 }
